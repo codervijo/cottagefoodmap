@@ -1,0 +1,55 @@
+---
+import Layout from "../../../layouts/Layout.astro";
+import Seo from "../../../components/Seo.astro";
+import Disclaimer from "../../../components/Disclaimer.astro";
+import { STATES } from "../../../data/states";
+import { isUnverified } from "../../../data/schema";
+
+export function getStaticPaths() {
+  return STATES.map((state) => ({ params: { state: state.slug }, props: { state } }));
+}
+
+const { state } = Astro.props;
+const lab = state.labeling_requirements;
+---
+<Layout>
+  <Seo
+    slot="head"
+    title={`Cottage Food Labeling Requirements in ${state.name}`}
+    description={`Required cottage food label elements in ${state.name}, with the official source.`}
+    path={`/guides/labeling/${state.slug}`}
+    ogType="article"
+  />
+
+  <article class="container-prose py-10">
+    <p class="citation">Guide · Labeling</p>
+    <h1 class="font-serif text-3xl md:text-4xl">Cottage food labeling requirements in {state.name}</h1>
+    <div class="mt-4"><Disclaimer /></div>
+
+    {isUnverified(lab) ? (
+      <p class="mt-6">Unverified — see the official {state.name} agency for current label rules.</p>
+    ) : (
+      <>
+        <p class="mt-6 text-lg">
+          Each package of cottage food sold in {state.name} must include:
+        </p>
+        <ul class="mt-4 list-disc space-y-1 pl-5">
+          {lab.value.map((l) => <li>{l}</li>)}
+        </ul>
+        <div class="mt-6 rounded border border-border bg-card p-4 text-sm">
+          <p class="font-medium">Source</p>
+          <p class="citation mt-1">
+            <a href={lab.source_url} target="_blank" rel="noopener noreferrer">
+              {lab.source_title ?? lab.source_url}
+            </a>{" "}
+            · Verified {lab.last_verified}
+          </p>
+        </div>
+      </>
+    )}
+
+    <p class="mt-8 text-sm">
+      See the full <a href={`/states/${state.slug}`}>{state.name} cottage food page</a>.
+    </p>
+  </article>
+</Layout>

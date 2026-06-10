@@ -1,0 +1,66 @@
+---
+import Layout from "../../../layouts/Layout.astro";
+import Seo from "../../../components/Seo.astro";
+import Disclaimer from "../../../components/Disclaimer.astro";
+import { STATES } from "../../../data/states";
+import { isUnverified } from "../../../data/schema";
+
+export function getStaticPaths() {
+  return STATES.map((state) => ({ params: { state: state.slug }, props: { state } }));
+}
+
+const { state } = Astro.props;
+const cost = state.license_cost_usd;
+const permit = state.permit_required;
+
+let answer = "Unverified — check the official source below.";
+if (!isUnverified(cost)) {
+  if (cost.value === "none") answer = `${state.name} does not charge a state cottage food license fee.`;
+  else if (cost.value === "varies") answer = `${state.name} sets cottage food fees at the local level — they vary by jurisdiction.`;
+  else answer = `${state.name} charges $${cost.value.toLocaleString()} for a cottage food license.`;
+}
+---
+<Layout>
+  <Seo
+    slot="head"
+    title={`Cottage Food License Cost in ${state.name}`}
+    description={`What does a cottage food license cost in ${state.name}? Sourced answer with citation to the official state agency.`}
+    path={`/guides/license-cost/${state.slug}`}
+    ogType="article"
+  />
+
+  <article class="container-prose py-10">
+    <p class="citation">Guide · License cost</p>
+    <h1 class="font-serif text-3xl md:text-4xl">Cottage food license cost in {state.name}</h1>
+    <div class="mt-4"><Disclaimer /></div>
+
+    <p class="mt-6 text-lg leading-relaxed">{answer}</p>
+
+    {!isUnverified(permit) && (
+      <p class="mt-3 text-sm text-muted-foreground">
+        {permit.value
+          ? `${state.name} requires a state permit or registration to operate as a cottage food producer.`
+          : `${state.name} does not require a state-issued permit.`}
+      </p>
+    )}
+
+    <div class="mt-6 rounded border border-border bg-card p-4 text-sm">
+      <p class="font-medium">Source</p>
+      {!isUnverified(cost) ? (
+        <p class="citation mt-1">
+          <a href={cost.source_url} target="_blank" rel="noopener noreferrer">
+            {cost.source_title ?? cost.source_url}
+          </a>{" "}
+          · Verified {cost.last_verified}
+        </p>
+      ) : (
+        <p class="citation mt-1">No verified source yet.</p>
+      )}
+    </div>
+
+    <p class="mt-8 text-sm">
+      See the full <a href={`/states/${state.slug}`}>{state.name} cottage food page</a>{" "}
+      for permit details, sales cap, allowed foods, and labeling rules.
+    </p>
+  </article>
+</Layout>

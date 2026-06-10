@@ -1,0 +1,57 @@
+---
+import Layout from "../../../../layouts/Layout.astro";
+import Seo from "../../../../components/Seo.astro";
+import Disclaimer from "../../../../components/Disclaimer.astro";
+import { STATES } from "../../../../data/states";
+import { FOODS, statusForFood } from "../../../../data/foods";
+
+export function getStaticPaths() {
+  return FOODS.flatMap((food) =>
+    STATES.map((state) => ({
+      params: { food: food.slug, state: state.slug },
+      props: { food, state },
+    })),
+  );
+}
+
+const { food, state } = Astro.props;
+const status = statusForFood(state, food);
+
+const headline =
+  status === "allowed"
+    ? `Yes — ${food.name.toLowerCase()} is allowed under ${state.name} cottage food law.`
+    : status === "prohibited"
+      ? `No — ${food.name.toLowerCase()} is not allowed under ${state.name} cottage food law.`
+      : `It's unclear from ${state.name}'s official list. Confirm with the state agency before producing.`;
+---
+<Layout>
+  <Seo
+    slot="head"
+    title={`Can I sell ${food.name.toLowerCase()} from home in ${state.name}?`}
+    description={`Whether ${food.name.toLowerCase()} can legally be sold from a home kitchen in ${state.name} under cottage food law, with the official source.`}
+    path={`/guides/sell/${food.slug}/${state.slug}`}
+    ogType="article"
+  />
+
+  <article class="container-prose py-10">
+    <p class="citation">Guide · Selling from home</p>
+    <h1 class="font-serif text-3xl md:text-4xl">
+      Can I sell {food.name.toLowerCase()} from home in {state.name}?
+    </h1>
+    <div class="mt-4"><Disclaimer /></div>
+
+    <p class="mt-6 text-lg leading-relaxed">{headline}</p>
+
+    <p class="mt-4 text-sm text-muted-foreground">
+      Status is derived from {state.name}'s official allowed and prohibited foods lists. Even when
+      a food is allowed, you still must meet that state's permit, labeling, and sales-channel rules.
+    </p>
+
+    <p class="mt-8 text-sm">
+      Read the full
+      <a href={`/states/${state.slug}`}>{state.name} cottage food page</a>{" "}
+      or see the
+      <a href={`/foods/${food.slug}`}>{food.name}</a> category across states.
+    </p>
+  </article>
+</Layout>

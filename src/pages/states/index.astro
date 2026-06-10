@@ -1,0 +1,16 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import Seo from "../../components/Seo.astro";
+import { StatesList } from "../../components/StatesList.tsx";
+import { STATES } from "../../data/states";
+---
+<Layout>
+  <Seo
+    slot="head"
+    title="Cottage Food Laws by State — Cottage Food Law /US"
+    description="Browse and filter cottage food laws by state: permit requirements, sales caps, online sales, and allowed foods."
+    path="/states"
+  />
+
+  <StatesList states={STATES} client:load />
+</Layout>

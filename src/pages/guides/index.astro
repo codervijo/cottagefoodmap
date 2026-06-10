@@ -1,0 +1,59 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import Seo from "../../components/Seo.astro";
+import { STATES } from "../../data/states";
+import { FOODS } from "../../data/foods";
+---
+<Layout>
+  <Seo
+    slot="head"
+    title="Cottage Food Guides — Costs, Labeling, Selling From Home"
+    description="Quick guides answering common cottage food questions per state: license cost, labeling, and selling specific foods from home."
+    path="/guides"
+  />
+
+  <div class="container-prose py-10">
+    <h1 class="font-serif text-3xl md:text-4xl">Guides</h1>
+    <p class="mt-3 max-w-2xl text-muted-foreground">
+      Short, sourced answers to the questions people search for most. Every answer links back to
+      the official state page it came from.
+    </p>
+
+    <section class="mt-8">
+      <h2 class="font-serif text-2xl">Cottage food license cost</h2>
+      <ul class="mt-3 grid grid-cols-1 gap-2 text-sm md:grid-cols-2">
+        {STATES.map((s) => (
+          <li>
+            <a href={`/guides/license-cost/${s.slug}`}>Cottage food license cost in {s.name}</a>
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    <section class="mt-10">
+      <h2 class="font-serif text-2xl">Labeling requirements</h2>
+      <ul class="mt-3 grid grid-cols-1 gap-2 text-sm md:grid-cols-2">
+        {STATES.map((s) => (
+          <li>
+            <a href={`/guides/labeling/${s.slug}`}>Cottage food labeling requirements in {s.name}</a>
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    <section class="mt-10">
+      <h2 class="font-serif text-2xl">Can I sell this from home?</h2>
+      <ul class="mt-3 grid grid-cols-1 gap-2 text-sm md:grid-cols-2">
+        {FOODS.flatMap((f) =>
+          STATES.map((s) => (
+            <li>
+              <a href={`/guides/sell/${f.slug}/${s.slug}`}>
+                Can I sell {f.name.toLowerCase()} from home in {s.name}?
+              </a>
+            </li>
+          )),
+        )}
+      </ul>
+    </section>
+  </div>
+</Layout>

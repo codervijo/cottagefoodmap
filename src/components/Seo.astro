@@ -1,0 +1,17 @@
+---
+const {
+  title,
+  description,
+  path,
+  ogType = "website",
+} = Astro.props;
+const site = "https://cottagefoodmap.com";
+const url = site + path;
+---
+<title>{title}</title>
+<meta name="description" content={description} />
+<link rel="canonical" href={url} />
+<meta property="og:type" content={ogType} />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={url} />

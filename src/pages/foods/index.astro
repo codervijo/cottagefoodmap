@@ -1,0 +1,31 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import Seo from "../../components/Seo.astro";
+import { FOODS } from "../../data/foods";
+---
+<Layout>
+  <Seo
+    slot="head"
+    title="Cottage Food Categories — Where Each Food Is Allowed"
+    description="Browse cottage food categories — jams, baked goods, candy, honey, pickles — and see where each is allowed or prohibited."
+    path="/foods"
+  />
+
+  <div class="container-prose py-10">
+    <h1 class="font-serif text-3xl md:text-4xl">Foods, state by state</h1>
+    <p class="mt-3 max-w-2xl text-muted-foreground">
+      Pick a category to see where it can be sold as a cottage food, where it's prohibited, and
+      where the rules are unclear.
+    </p>
+    <ul class="mt-8 divide-y divide-rule border-t border-rule">
+      {FOODS.map((f) => (
+        <li class="py-4">
+          <a href={`/foods/${f.slug}`} class="no-underline">
+            <h2 class="font-serif text-xl text-foreground">{f.name}</h2>
+          </a>
+          <p class="mt-1 text-sm text-muted-foreground">{f.description}</p>
+        </li>
+      ))}
+    </ul>
+  </div>
+</Layout>

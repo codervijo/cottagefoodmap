@@ -1,0 +1,23 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import Seo from "../../components/Seo.astro";
+import { StateDetail } from "../../components/StateDetail.tsx";
+import { STATES } from "../../data/states";
+
+export function getStaticPaths() {
+  return STATES.map((state) => ({ params: { slug: state.slug }, props: { state } }));
+}
+
+const { state } = Astro.props;
+---
+<Layout>
+  <Seo
+    slot="head"
+    title={`${state.name} Cottage Food Law — Permits, Sales Cap, Allowed Foods`}
+    description={`Cottage food law in ${state.name}: permit requirements, license cost, sales cap, allowed and prohibited foods, labeling, and sales channels. Sourced.`}
+    path={`/states/${state.slug}`}
+    ogType="article"
+  />
+
+  <StateDetail state={state} />
+</Layout>
