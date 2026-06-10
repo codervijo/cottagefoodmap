@@ -1,0 +1,55 @@
+# lamill.toml — per-site config consumed by lamill (portfolio/ops) and rankmill (content/audits).
+# [content] = stable identity, authored by hand. [todo] = volatile work state.
+# rankmill output lives in sites/<domain>/rankmill-output/, not here.
+
+schema = "lamill-toml-v1"
+
+[deploy]
+platform = "cf-pages"
+production_branch = "main"
+custom_domains = [
+    "cottagefoodmap.com",
+]
+
+[index]
+indexnow_key = "3c06d3652bbeffaf3ba33e0e265b658f"
+indexnow_enabled = true
+
+[stack]
+framework = "astro"
+
+# Tracked todos for cottagefoodmap.com. status: "done" | "open".
+[[todo]]
+status = "open"
+priority = "medium"
+task = "Check SEO: GSC indexation + coverage (revisit ~2026-06-23)"
+
+[[todo]]
+status = "open"
+priority = "medium"
+task = "Verify GA4 is receiving data (check Realtime after first traffic)"
+
+[[todo]]
+status = "open"
+priority = "low"
+task = "Confirm GSC verification + sitemap submitted (re-run deploy if it timed out)"
+
+[content]
+# Declarative content identity for this site.
+# Authored by the human; consumed by rankmill to generate drafts and run audits.
+# Leave fields empty until you have a deliberate answer. Empty is better than wrong.
+site_type = "legal-compliance"
+primary_keyword = "cottage food laws by state"
+secondary_keywords = [
+    "cottage food license cost in Texas",
+    "can I sell from home in Ohio",
+    "California cottage food labeling requirements",
+    "cottage food permit requirements",
+    "allowed cottage foods by state",
+    "where can I sell cottage foods",
+]
+icp = "The core user is a US-based individual, disproportionately women running or planning a home food microbusiness (baked goods, jams, cottage-canned goods, candy), who has a real product but no legal background and a low budget. They're motivated by a concrete trigger — wanting to sell at a farmers market, take Instagram orders, or scale a hobby — and anxious about doing it legally without hiring a lawyer or wading through statute. They search highly specific questions (\"cottage food license cost in Texas,\" \"can I sell from home in Ohio,\" \"California cottage food labeling requirements\") and want a fast, trustworthy, plain-English answer for their state, ideally with a link to the offi"
+urgency_trigger = "Planning to start selling (farmers market, Instagram orders, or other sales) and needing to confirm legal requirements before launching."
+penalty = "Risk of operating illegally — potential legal trouble, being unable to sell, or lost income."
+tone = "plain-English, authoritative, trust-building, concise"
+law = ""                  # statute or regulation if applicable, else empty

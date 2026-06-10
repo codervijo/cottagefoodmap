@@ -1,0 +1,78 @@
+// Food categories that map across state allowed/prohibited lists.
+// `match` is a list of case-insensitive substrings to test against state data.
+
+export interface FoodCategory {
+  slug: string;
+  name: string;
+  description: string;
+  match: string[]; // substrings to look up in allowed_foods/prohibited_foods values
+}
+
+export const FOODS: FoodCategory[] = [
+  {
+    slug: "jams-and-jellies",
+    name: "Jams & Jellies",
+    description: "Fruit preserves, jams, jellies, marmalades, and fruit butters.",
+    match: ["jam", "jelly", "jellies", "preserve", "marmalade", "fruit butter"],
+  },
+  {
+    slug: "baked-goods",
+    name: "Baked Goods",
+    description: "Breads, cookies, cakes, brownies, and similar shelf-stable baked items.",
+    match: ["baked good", "bread", "cookie", "cake", "pastry", "brownie", "biscuit", "roll", "pie"],
+  },
+  {
+    slug: "candy",
+    name: "Candy & Confections",
+    description: "Hard candies, toffees, brittles, and confections.",
+    match: ["candy", "confection", "toffee", "brittle"],
+  },
+  {
+    slug: "honey",
+    name: "Honey",
+    description: "Raw or bottled honey from the operator.",
+    match: ["honey"],
+  },
+  {
+    slug: "pickles-and-fermented",
+    name: "Pickles & Fermented Foods",
+    description: "Acidified or fermented vegetables, pickles, salsa, and sauces.",
+    match: ["pickle", "ferment", "salsa", "acidified"],
+  },
+  {
+    slug: "dried-goods",
+    name: "Dried Goods & Mixes",
+    description: "Dried fruit, dried herbs, dry baking mixes, granola, and cereals.",
+    match: ["dried", "dry baking", "granola", "cereal", "trail mix", "dry pasta", "spice", "herb blend"],
+  },
+  {
+    slug: "coffee-and-tea",
+    name: "Coffee & Tea",
+    description: "Roasted coffee beans and dry tea blends.",
+    match: ["coffee", "tea"],
+  },
+];
+
+export const FOODS_BY_SLUG: Record<string, FoodCategory> = Object.fromEntries(
+  FOODS.map((f) => [f.slug, f]),
+);
+
+export type FoodStatus = "allowed" | "prohibited" | "unclear";
+
+import type { StateLaw } from "./schema";
+import { isUnverified } from "./schema";
+
+export function statusForFood(state: StateLaw, food: FoodCategory): FoodStatus {
+  const allowed = isUnverified(state.allowed_foods) ? [] : state.allowed_foods.value;
+  const prohibited = isUnverified(state.prohibited_foods) ? [] : state.prohibited_foods.value;
+  const matches = (list: string[]) =>
+    list.some((item) =>
+      food.match.some((m) => item.toLowerCase().includes(m.toLowerCase())),
+    );
+  const isProhibited = matches(prohibited);
+  const isAllowed = matches(allowed);
+  // Prohibited takes precedence (e.g., NY chocolate-candy carveout)
+  if (isProhibited) return "prohibited";
+  if (isAllowed) return "allowed";
+  return "unclear";
+}
