@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://cottagefoodmap.com/sitemap.xml
+Sitemap: https://cottagefoodmap.com/sitemap-index.xml
