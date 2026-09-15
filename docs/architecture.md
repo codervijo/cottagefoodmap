@@ -1,12 +1,12 @@
 # Architecture — cottagefoodmap.com
 
-Status as of v1.B (2026-09-15). Roadmap and phases live in `docs/prd.md`.
+Status as of v1.E (2026-09-15). Roadmap and phases live in `docs/prd.md`.
 
 ## 1. Overview
 
 A fully static Astro site. All content is generated at build time from typed state-law data in
 `src/data/`; there is no server runtime, database, or CMS. Every factual field carries its own
-source URL and verification date, and pages render those citations inline. Output is 63
+source URL and verification date, and pages render those citations inline. Output is 64
 prerendered HTML pages plus `sitemap-index.xml`, served by Cloudflare.
 
 ```
@@ -20,7 +20,7 @@ src/data/phrases.ts ───┘                                            dist
 | Path | Role |
 |---|---|
 | `src/data/schema.ts` | `StateLaw` interface, `Fact<T>` (value + `source_url` + `last_verified`) / `Unverified` union, `isUnverified` guard |
-| `src/data/states/<state>.ts` | One `StateLaw` record per state (CA, FL, NY, OH, TX), 12 facts each, 2 source URLs each |
+| `src/data/states/<state>.ts` | One `StateLaw` record per state (CA, FL, NY, OH, TX), 12 facts each, all re-verified 2026-09-15 (v1.D) against official sources listed in `sources` |
 | `src/data/states/index.ts` | `STATES` (sorted by name), `STATES_BY_SLUG`, `getState` |
 | `src/data/foods.ts` | 7 `FoodCategory` entries with substring `match` terms; `foodMatches`, `statusForFood`, `STATUS_ANSWER` |
 | `src/data/phrases.ts` | Short data-derived phrases for titles/descriptions (`permitPhrase`, `costPhrase`, `costTitle`, `capPhrase`, `joinPhrases`); unverified facts return `null` |
@@ -44,10 +44,17 @@ src/data/phrases.ts ───┘                                            dist
   `license_cost_usd` (`number | "varies" | "none"`), `sales_cap_usd_annual` (`number | "none"`),
   `allowed_foods`, `prohibited_foods`, `labeling_requirements`, `sales_channels`,
   `training_required`, `inspection_required`. Plus non-fact `caveats`, `sources`, `last_reviewed`.
-- **Food status** is derived, not stored. `foodMatches` returns the state's own allowed/prohibited
-  list items whose text contains any of the category's `match` substrings. `statusForFood`:
-  both lists match → `restricted`; prohibited only → `prohibited`; allowed only → `allowed`;
-  neither → `unclear`.
+- **`sales_channels`** booleans may be `null` = the official source doesn't address that channel;
+  rendered as "Not addressed", never guessed as yes or no.
+- **`allows_all_except_prohibited`** (optional) — the law allows any food except the prohibited
+  list (Texas since SB 541). A food with no prohibited match is then `allowed`.
+- **`food_status_overrides`** (optional, keyed by food slug) — explicit status plus a `reason`
+  restating the source, for cases list matching can't express (e.g. Ohio lists only *flavored*
+  honey). The reason is shown on the guide page.
+- **Food status** is derived. `statusForFood`: override if present; else `foodMatches` returns
+  the state's allowed/prohibited list items containing a category `match` term at a word start
+  (`pie` matches "pies", not "Krispies"). Both lists match → `restricted`; prohibited only →
+  `prohibited`; allowed only (or all-except state) → `allowed`; neither → `unclear`.
 
 ## 4. Page generation
 
@@ -62,6 +69,7 @@ src/data/phrases.ts ───┘                                            dist
 | `/guides/labeling/<state>/` | | 5 |
 | `/guides/sell/<food>/<state>/` | title ends with `STATUS_ANSWER`; description adds permit · fee · cap; lists matched items with sources | 35 |
 | `/about/` | | 1 |
+| `404.html` | `pages/404.astro` — noindex, not in sitemap | 1 |
 
 URL policy: every page URL, canonical, and internal link ends in `/` (`trailingSlash: 'always'`);
 Cloudflare 308s the slashless form. Enforced by `trailing-slash.test.js`.
@@ -70,12 +78,13 @@ Cloudflare 308s the slashless form. Enforced by `trailing-slash.test.js`.
 
 - **Build:** `pnpm build` → `astro build` → `dist/` (directory format) + `@astrojs/sitemap`.
   Runs inside the `sites1` docker image (Node 22); the host Node is too old.
-- **Test:** `pnpm test` → Vitest. `vitest.config.js` sets `environment: 'jsdom'`, which is not
-  installed — run `pnpm exec vitest run --environment node` until v1.C fixes it.
+- **Test:** `pnpm test` → Vitest, `environment: 'node'` (no DOM tests).
 - **CI:** `.github/workflows/ci.yml` — `pnpm install --frozen-lockfile`, build, test on push/PR.
 - **Deploy:** push to `main` → Cloudflare Git integration builds and deploys (observed live
-  ~30s after push on 2026-09-15). `lamill.toml` declares `cf-pages`; `wrangler.jsonc` configures
-  static assets from `./dist`.
+  ~30s after push on 2026-09-15). The site is served by Cloudflare Pages (`cottagefoodmap.pages.dev`).
+- **404s:** `src/pages/404.astro` → `dist/404.html` (noindex). Pages serves it with HTTP 404 for
+  unknown URLs; without it Pages falls back to SPA mode (200 + home page for every URL).
+  `wrangler.jsonc` sets `not_found_handling: "404-page"` to match.
 
 ## 6. Decisions
 
@@ -90,24 +99,28 @@ Cloudflare 308s the slashless form. Enforced by `trailing-slash.test.js`.
 - **ADR-004 (v1.B) — Titles and descriptions are derived from facts.** Guide titles carry the
   answer; descriptions are assembled from verified facts only (`phrases.ts`), so metadata can't
   drift from page content or state an unverified value.
+- **ADR-005 (v1.E) — Real 404s.** Unknown URLs must return HTTP 404, not the home page with 200,
+  so search engines don't index junk URLs as duplicates of `/`.
+- **ADR-006 (v1.D) — Unaddressed is not no.** When an official source is silent on a sales
+  channel, the value is `null` ("Not addressed") rather than an inferred yes/no; figures without
+  an official source (e.g. fee ranges, course prices) were removed rather than kept as notes.
 
 ## 7. Tracked refactors
 
-- **Substring food matching.** `statusForFood` matches category terms as raw substrings against
-  free-text list items (e.g. `"pie"` hits "Pumpkin pies", `"cake"` hits "cheesecake"). ADR-003
-  fixed the visible symptom (both-list conflicts), but the root cause remains: status depends on
-  list wording, not on structured per-category data. Candidate fix: store explicit per-category
-  status (with source) in each `StateLaw`. Relevant to v1.D (re-verification) and v5
-  (fact-correctness checks).
+- **Text-based food matching.** Status still depends on list wording. v1.D narrowed matching to
+  word starts and added `food_status_overrides`, but matches can still be loose (e.g. FL "dried
+  goods" is "with limits" because "dried meat" is prohibited). Candidate fix: store explicit
+  per-category status with a source in each `StateLaw`, and have v5 checks compare it with the
+  list text.
 - **Duplicate head tags.** `Layout.astro` emits site-level `og:type`/`og:site_name`/`twitter:card`
   and `Seo.astro` emits per-page `og:type`; `index.astro` hand-writes its own head instead of
   using `Seo.astro`. Consolidate into one head component.
 
 ## 8. Known issues
 
-- **Soft 404s.** Unknown URLs return HTTP 200 with the home page (verified 2026-09-15 on
-  `/no-such-page-xyz/`), consistent with `not_found_handling: "single-page-application"` in
-  `wrangler.jsonc`. There is no `src/pages/404.astro`. Fix planned in v1.E.
-- **CI red** until v1.C: `pnpm-lock.yaml` is untracked (CI uses `--frozen-lockfile`) and `jsdom`
-  is missing.
-- **`FL_STATUTE`** points at the 2023 statutes edition — fixed in v1.D.
+- **Hard-to-fetch official sources** (relevant to the v4 source watcher): cdph.ca.gov serves an
+  incomplete TLS certificate chain (strict clients fail); agriculture.ny.gov returns 403 to
+  non-browser clients for PDFs and forms; statutes.capitol.texas.gov is a JavaScript shell (use
+  tcss.legis.texas.gov for text); agri.ohio.gov 404s some non-browser requests.
+- **Texas sales cap** is CPI-U adjusted by DSHS annually; no adjusted figure was published on the
+  official sources checked 2026-09-15, so the site shows the statutory $150,000.

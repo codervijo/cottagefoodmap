@@ -74,3 +74,12 @@ The high-volume generic head terms ("texas cottage food law") are increasingly a
 - **Action:** `trailingSlash: 'always'`; canonicals and all internal links now end in `/`. "Can I sell X" titles end with Yes / Yes, with limits / No / Unclear, and descriptions add permit · fee · sales cap from the state data. License-cost titles include the cost. Also fixed the matcher: a food named on both lists was marked "prohibited", so CA/FL/NY/OH baked goods and OH coffee showed "No". It's now "restricted" ("Yes, with limits"), and the page lists the matched items with their sources.
 - **Result:** TBD — review 2026-10-13
 - **Learning:** TBD
+
+## 2026-09-15 — v1.D: all 5 states re-verified against official sources
+- **Status:** active
+- **Hypothesis:** Correct, current, sourced answers are the site's only defensible edge. Fixing stale facts (Texas SB 541, California 2026 caps) and dead source links protects trust and should lift engagement on affected guide pages over time; wrong answers were a credibility risk regardless of traffic.
+- **KPI:** GSC clicks and CTR on `/guides/sell/*/texas/` and `/states/texas/`; no regressions in indexed pages.
+- **Baseline (GSC 28d to 2026-09-12):** site 630 imp · 3 clicks. `coffee-and-tea/texas/` 82 imp · 0 clicks · pos 9.9. `states/texas` 13 + 10 imp (slash/no-slash split).
+- **Action:** Rewrote CA, FL, NY, OH, TX data from official sources (re-fetched and checked). Texas: cap $50,000 → $150,000, any food except 6 categories, new label disclosure, wholesale to vendors. CA: 2026 caps. FL: coffee/tea not on the FDACS list → "Unclear". NY/OH/TX: dead agency URLs replaced. Ohio honey → "Yes, with limits".
+- **Result:** TBD — review 2026-10-13
+- **Learning:** TBD

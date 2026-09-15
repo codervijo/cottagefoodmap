@@ -1,5 +1,5 @@
 // Food categories that map across state allowed/prohibited lists.
-// `match` is a list of case-insensitive substrings to test against state data.
+// `match` is a list of case-insensitive terms matched at word starts against state data.
 
 export interface FoodCategory {
   slug: string;
@@ -69,20 +69,24 @@ export function foodMatches(
 ): { allowed: string[]; prohibited: string[] } {
   const allowed = isUnverified(state.allowed_foods) ? [] : state.allowed_foods.value;
   const prohibited = isUnverified(state.prohibited_foods) ? [] : state.prohibited_foods.value;
+  // Match terms at the start of a word: "pie" matches "pies" but not "Krispies".
+  const patterns = food.match.map(
+    (m) => new RegExp(`\\b${m.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}`, "i"),
+  );
   const hits = (list: string[]) =>
-    list.filter((item) =>
-      food.match.some((m) => item.toLowerCase().includes(m.toLowerCase())),
-    );
+    list.filter((item) => patterns.some((re) => re.test(item)));
   return { allowed: hits(allowed), prohibited: hits(prohibited) };
 }
 
 export function statusForFood(state: StateLaw, food: FoodCategory): FoodStatus {
+  const override = state.food_status_overrides?.[food.slug];
+  if (override) return override.status;
   const { allowed, prohibited } = foodMatches(state, food);
   // Both lists name the category (e.g., CA allows baked goods but prohibits
   // cream-filled ones) — allowed only within the listed limits.
   if (allowed.length && prohibited.length) return "restricted";
   if (prohibited.length) return "prohibited";
-  if (allowed.length) return "allowed";
+  if (allowed.length || state.allows_all_except_prohibited) return "allowed";
   return "unclear";
 }
 

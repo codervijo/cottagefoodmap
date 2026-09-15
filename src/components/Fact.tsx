@@ -56,7 +56,8 @@ export function FactRow({ label, fact, render }: FactRowProps) {
   );
 }
 
-export function YesNo({ value }: { value: boolean }) {
+export function YesNo({ value }: { value: boolean | null }) {
+  if (value === null) return <span className="badge-chip badge-unverified">Not addressed</span>;
   return (
     <span className={`badge-chip ${value ? "badge-yes" : "badge-no"}`}>
       {value ? "Yes" : "No"}

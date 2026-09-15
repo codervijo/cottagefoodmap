@@ -68,9 +68,9 @@ Two-level versioning convention (canonical: `sites/portfolio/AI_AGENTS.md`):
 | **v0.A** | scaffolded | `portfolio new bootstrap` ran; standard files written; git initialized | ✅ |
 | **v1.A** | plan v1 | this PRD: problem, users, goals, v1–v5 roadmap; open decisions assigned to the phase that needs them (§6) | ✅ |
 | **v1.B** | Astro port + SEO baseline | TanStack Start → Astro static (`181289c`); 63 prerendered pages (5 states × state, license-cost, labeling, 7 food guides; food categories; compare); trailing-slash canonicals + internal links; answer-first guide titles/descriptions; food-status matcher fix — category on both lists is "restricted", not "prohibited" (`82e94eb`) | ✅ |
-| **v1.C** | CI green | commit `pnpm-lock.yaml` (CI runs `--frozen-lockfile`); vitest environment `jsdom` → `node` (no DOM tests; `jsdom` was never installed); CI passes on push | 🚧 |
-| **v1.D** | re-verification pass | all 60 facts (5 states × 12) re-checked against primary sources; values corrected, `last_verified` updated only after a real check; unconfirmable facts → `Unverified`; stale source URLs fixed (e.g. `FL_STATUTE` pinned to the 2023 edition) | planned |
-| **v1.E** | unknown URL handling | unknown URLs return HTTP 404 with a `404.astro` page (links to states, foods, guides) instead of 200 + home page; replace `not_found_handling: "single-page-application"` in `wrangler.jsonc`; verify on the live site | planned |
+| **v1.C** | CI green | commit `pnpm-lock.yaml` (CI runs `--frozen-lockfile`); vitest environment `jsdom` → `node` (no DOM tests; `jsdom` was never installed); CI passes on push (`e3a28ae`) | ✅ |
+| **v1.D** | re-verification pass | all 60 facts (5 states × 12) re-checked against primary sources; values corrected, `last_verified` updated only after a real check; unconfirmable facts → `Unverified`; stale source URLs fixed (e.g. `FL_STATUTE` pinned to the 2023 edition). Done 2026-09-15: all 5 states rewritten from official sources; TX updated for SB 541 (cap $150,000, any food except 6 categories, new label disclosure, wholesale to vendors); CA 2026 CPI caps ($88,878 / $177,756); dead source URLs replaced (NY, OH, TX agency pages); unsourced figures removed; sales channels an official source doesn't address shown as "Not addressed" | ✅ |
+| **v1.E** | unknown URL handling | unknown URLs return HTTP 404 with a `404.astro` page (links to states, foods, guides) instead of 200 + home page; replace `not_found_handling: "single-page-application"` in `wrangler.jsonc`; verified live 2026-09-15 (`081190c`) | ✅ |
 | **v2.A** | plan v2 | resolve the v2 open questions in §6; define v2 build phases | planned |
 | **v3.A** | plan v3 | resolve the v3 open questions in §6; define v3 build phases | planned |
 | **v4.A** | plan v4 | resolve the v4 open questions in §6; define v4 build phases | planned |
@@ -79,8 +79,8 @@ Two-level versioning convention (canonical: `sites/portfolio/AI_AGENTS.md`):
 ## 6. Open questions
 
 - *(append-only log; mark answered with date but never delete)*
-- **v1.D** — Re-verification method: operator verifies each fact, or Claude drafts from the source and the operator approves?
-- **v1.D** — "Unclear" food statuses (honey in NY/OH/TX, coffee & tea in NY): research and add explicit data, or leave as unclear?
+- **v1.D** — Re-verification method: operator verifies each fact, or Claude drafts from the source and the operator approves? — *answered 2026-09-15:* Claude researched each state from official sources, re-fetched and checked every key quote before editing, and the operator reviews the diff.
+- **v1.D** — "Unclear" food statuses (honey in NY/OH/TX, coffee & tea in NY): research and add explicit data, or leave as unclear? — *answered 2026-09-15:* researched. TX allows any food except 6 categories (honey, coffee, tea allowed). OH: only flavored honey from exempt beekeepers ("Yes, with limits"); coffee and dry tea blends allowed. NY: honey is under a separate exemption (stays unclear, with reason); beverages and coffee roasting prohibited. FL: coffee and tea are not on the FDACS list (now unclear).
 - **v2** — Which 15 states to add, and by what criterion (GSC impressions, keyword demand, population, law clarity)?
 - **v2** — Per-state sourcing workflow: how a new state gets researched, cited, and reviewed.
 - **v2** — Does the 7-category food list or the `StateLaw` schema need to change to fit new states?

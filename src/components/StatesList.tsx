@@ -21,6 +21,7 @@ export function StatesList({ states }: { states: StateLaw[] }) {
       if (online !== "all") {
         if (isUnverified(s.sales_channels)) return false;
         const v = s.sales_channels.value.online_in_state;
+        if (v === null) return false;
         if (online === "yes" && !v) return false;
         if (online === "no" && v) return false;
       }

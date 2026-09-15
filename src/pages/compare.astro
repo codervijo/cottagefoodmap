@@ -58,8 +58,8 @@ function cell(f, render) {
                     v === "none" ? "No cap" : `$${v.toLocaleString()}`,
                   )}
                 </td>
-                <td class="px-3 py-3">{ch ? (ch.online_in_state ? "Yes" : "No") : "—"}</td>
-                <td class="px-3 py-3">{ch ? (ch.online_out_of_state ? "Yes" : "No") : "—"}</td>
+                <td class="px-3 py-3">{ch ? (ch.online_in_state === null ? "Not addressed" : ch.online_in_state ? "Yes" : "No") : "—"}</td>
+                <td class="px-3 py-3">{ch ? (ch.online_out_of_state === null ? "Not addressed" : ch.online_out_of_state ? "Yes" : "No") : "—"}</td>
                 <td class="px-3 py-3">{cell(s.training_required, (v) => (v ? "Yes" : "No"))}</td>
                 <td class="px-3 py-3">{cell(s.inspection_required, (v) => (v ? "Yes" : "No"))}</td>
               </tr>

@@ -29,16 +29,23 @@ export interface StateLaw {
   license_cost_usd: Fact<number | "varies" | "none">;
   sales_cap_usd_annual: Fact<number | "none">;
   sales_cap_notes?: Fact<string>;
+  // true when the law allows any food except those listed as prohibited (e.g. Texas
+  // after SB 541); allowed_foods then holds that rule as stated by the source.
+  allows_all_except_prohibited?: boolean;
+  // Per food-category status when list matching can't express the source (keyed by
+  // FoodCategory slug). `reason` must restate what the cited source says.
+  food_status_overrides?: Record<string, { status: "allowed" | "restricted" | "prohibited" | "unclear"; reason: string }>;
   allowed_foods: Fact<string[]>;
   prohibited_foods: Fact<string[]>;
   labeling_requirements: Fact<string[]>;
+  // null = the official source doesn't address this channel (shown as "Not addressed").
   sales_channels: Fact<{
-    in_person: boolean;
-    farmers_market: boolean;
-    online_in_state: boolean;
-    online_out_of_state: boolean;
-    delivery_in_state: boolean;
-    retail_resale: boolean;
+    in_person: boolean | null;
+    farmers_market: boolean | null;
+    online_in_state: boolean | null;
+    online_out_of_state: boolean | null;
+    delivery_in_state: boolean | null;
+    retail_resale: boolean | null;
     notes?: string;
   }>;
   training_required: Fact<boolean>;

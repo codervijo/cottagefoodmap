@@ -19,6 +19,7 @@ export function getStaticPaths() {
 const { food, state } = Astro.props;
 const status = statusForFood(state, food);
 const matches = foodMatches(state, food);
+const override = state.food_status_overrides?.[food.slug];
 const foodName = food.name.toLowerCase();
 
 const headline =
@@ -44,6 +45,14 @@ const rules = status === "allowed" || status === "restricted"
   : "";
 
 const allowedFact = state.allowed_foods;
+// States that allow any food except a prohibited list have no per-food allowed item;
+// show the rule itself instead.
+const allowedItems =
+  matches.allowed.length > 0
+    ? matches.allowed
+    : status === "allowed" && state.allows_all_except_prohibited && !isUnverified(allowedFact)
+      ? allowedFact.value
+      : [];
 const prohibitedFact = state.prohibited_foods;
 ---
 <Layout>
@@ -63,12 +72,13 @@ const prohibitedFact = state.prohibited_foods;
     <div class="mt-4"><Disclaimer /></div>
 
     <p class="mt-6 text-lg leading-relaxed">{headline}</p>
+    {override && <p class="mt-3">{override.reason}</p>}
 
-    {matches.allowed.length > 0 && !isUnverified(allowedFact) && (
+    {allowedItems.length > 0 && !isUnverified(allowedFact) && (
       <div class="mt-6 text-sm">
         <p class="font-medium">On {state.name}'s allowed list</p>
         <ul class="mt-1 list-disc pl-5">
-          {matches.allowed.map((item) => <li>{item}</li>)}
+          {allowedItems.map((item) => <li>{item}</li>)}
         </ul>
         <p class="citation mt-1">
           <a href={allowedFact.source_url} target="_blank" rel="noopener noreferrer">
