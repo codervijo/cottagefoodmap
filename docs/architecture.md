@@ -107,7 +107,7 @@ Cloudflare 308s the slashless form. Enforced by `trailing-slash.test.js`.
 
 - **Soft 404s.** Unknown URLs return HTTP 200 with the home page (verified 2026-09-15 on
   `/no-such-page-xyz/`), consistent with `not_found_handling: "single-page-application"` in
-  `wrangler.jsonc`. There is no `src/pages/404.astro`. Not yet assigned to a phase.
+  `wrangler.jsonc`. There is no `src/pages/404.astro`. Fix planned in v1.E.
 - **CI red** until v1.C: `pnpm-lock.yaml` is untracked (CI uses `--frozen-lockfile`) and `jsdom`
   is missing.
 - **`FL_STATUTE`** points at the 2023 statutes edition — fixed in v1.D.

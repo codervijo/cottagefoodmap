@@ -55,7 +55,7 @@ Two-level versioning convention (canonical: `sites/portfolio/AI_AGENTS.md`):
 | Version | Theme | Acceptance |
 |---|---|---|
 | v0 | scaffold | local builds, CF wrangler.jsonc + public/_headers in place, repo initialized |
-| v1 | 5 states, trustworthy and fresh | CA, FL, NY, OH, TX live; every fact re-verified against its primary source (or marked `Unverified`); no known wrong answers; CI green |
+| v1 | 5 states, trustworthy and fresh | CA, FL, NY, OH, TX live; every fact re-verified against its primary source (or marked `Unverified`); no known wrong answers; unknown URLs return a real 404; CI green |
 | v2 | 20 states | 15 more states at the v1 data standard |
 | v3 | all 50 states | remaining 30 states at the v1 data standard |
 | v4 | freshness | stale facts flagged automatically; source changes detected on a schedule; freshness exposed to search engines; public changelog of verified changes |
@@ -70,6 +70,7 @@ Two-level versioning convention (canonical: `sites/portfolio/AI_AGENTS.md`):
 | **v1.B** | Astro port + SEO baseline | TanStack Start → Astro static (`181289c`); 63 prerendered pages (5 states × state, license-cost, labeling, 7 food guides; food categories; compare); trailing-slash canonicals + internal links; answer-first guide titles/descriptions; food-status matcher fix — category on both lists is "restricted", not "prohibited" (`82e94eb`) | ✅ |
 | **v1.C** | CI green | commit `pnpm-lock.yaml` (CI runs `--frozen-lockfile`); fix vitest environment (`jsdom` not installed); CI passes on push | planned |
 | **v1.D** | re-verification pass | all 60 facts (5 states × 12) re-checked against primary sources; values corrected, `last_verified` updated only after a real check; unconfirmable facts → `Unverified`; stale source URLs fixed (e.g. `FL_STATUTE` pinned to the 2023 edition) | planned |
+| **v1.E** | unknown URL handling | unknown URLs return HTTP 404 with a `404.astro` page (links to states, foods, guides) instead of 200 + home page; replace `not_found_handling: "single-page-application"` in `wrangler.jsonc`; verify on the live site | planned |
 | **v2.A** | plan v2 | resolve the v2 open questions in §6; define v2 build phases | planned |
 | **v3.A** | plan v3 | resolve the v3 open questions in §6; define v3 build phases | planned |
 | **v4.A** | plan v4 | resolve the v4 open questions in §6; define v4 build phases | planned |
