@@ -77,8 +77,8 @@ docker exec -w /usr/src/app <name> make test proj=cottagefoodmap.com
 
 ## Deployment info
 
-- **Platform:** Cloudflare Workers (Static Assets) — *not* Vercel.
-- **Config:** `wrangler.jsonc` at the repo root — points `assets.directory` at `./dist` and uses `not_found_handling: "single-page-application"` for SPA client-side routing.
+- **Platform:** Cloudflare Pages (Git integration; `cottagefoodmap.pages.dev`) — *not* Vercel.
+- **Config:** `wrangler.jsonc` at the repo root — points `assets.directory` at `./dist` and uses `not_found_handling: "404-page"`. This is a static multi-page site, not an SPA: `src/pages/404.astro` builds `dist/404.html`, which Cloudflare serves with HTTP 404 for unknown URLs. Without a `404.html`, Pages falls back to SPA mode and answers every URL with the home page (200) — soft 404s (fixed in v1.E).
 - **Headers:** `public/_headers` — cache (`/assets/*` immutable, HTML no-cache) + security headers (`X-Content-Type-Options`, `X-Frame-Options`, `Referrer-Policy`). Vite copies `public/` into `dist/` at build, so the file ships with the assets.
 - **Build:** `pnpm build` → `dist/`. Wrangler picks up `dist/` via `wrangler.jsonc`.
 - **Deploy:** `wrangler deploy` (locally) or via Cloudflare's Git integration on push.

@@ -1,0 +1,45 @@
+---
+// Built to dist/404.html. Cloudflare Pages serves it with HTTP 404 for unknown URLs;
+// without it Pages falls back to SPA mode and answers every URL with the home page (200).
+import Layout from "../layouts/Layout.astro";
+import { STATES } from "../data/states";
+import { FOODS } from "../data/foods";
+---
+<Layout>
+  <Fragment slot="head">
+    <title>Page not found — Cottage Food Law /US</title>
+    <meta name="robots" content="noindex" />
+  </Fragment>
+
+  <div class="container-prose py-10">
+    <p class="citation">404</p>
+    <h1 class="font-serif text-3xl md:text-4xl">Page not found</h1>
+    <p class="mt-3 max-w-2xl text-muted-foreground">
+      That page doesn't exist. Pick a state or food category, or browse the guides.
+    </p>
+
+    <div class="mt-8 grid gap-8 md:grid-cols-2">
+      <div>
+        <h2 class="font-serif text-xl">States</h2>
+        <ul class="mt-3 space-y-1 text-sm">
+          {STATES.map((s) => (
+            <li><a href={`/states/${s.slug}/`}>{s.name}</a></li>
+          ))}
+        </ul>
+      </div>
+      <div>
+        <h2 class="font-serif text-xl">Foods</h2>
+        <ul class="mt-3 space-y-1 text-sm">
+          {FOODS.map((f) => (
+            <li><a href={`/foods/${f.slug}/`}>{f.name}</a></li>
+          ))}
+        </ul>
+      </div>
+    </div>
+
+    <p class="mt-8 text-sm">
+      Or see <a href="/guides/">all guides</a>, <a href="/compare/">compare states</a>, or go to the
+      <a href="/">home page</a>.
+    </p>
+  </div>
+</Layout>
