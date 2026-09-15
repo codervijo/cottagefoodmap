@@ -17,7 +17,7 @@ const rows = STATES.map((s) => ({ state: s, status: statusForFood(s, food) }));
     slot="head"
     title={`${food.name} as a Cottage Food — Where It's Allowed`}
     description={`Where you can legally sell ${food.name.toLowerCase()} as a cottage food. State-by-state status with sources.`}
-    path={`/foods/${food.slug}`}
+    path={`/foods/${food.slug}/`}
     ogType="article"
   />
 
@@ -33,7 +33,7 @@ const rows = STATES.map((s) => ({ state: s, status: statusForFood(s, food) }));
     <ul class="mt-4 divide-y divide-rule border-y border-rule">
       {rows.map(({ state, status }) => (
         <li class="flex flex-wrap items-center justify-between gap-2 py-3">
-          <a href={`/states/${state.slug}`} class="no-underline">
+          <a href={`/states/${state.slug}/`} class="no-underline">
             <span class="font-serif text-base text-foreground">{state.name}</span>{" "}
             <span class="citation">/{state.abbreviation}</span>
           </a>
@@ -42,14 +42,15 @@ const rows = STATES.map((s) => ({ state: s, status: statusForFood(s, food) }));
               status === "allowed" ? "badge-yes" : status === "prohibited" ? "badge-no" : "badge-unverified"
             }`}
           >
-            {status === "allowed" ? "Allowed" : status === "prohibited" ? "Prohibited" : "Unclear"}
+            {status === "allowed" ? "Allowed" : status === "restricted" ? "Allowed with limits" : status === "prohibited" ? "Prohibited" : "Unclear"}
           </span>
         </li>
       ))}
     </ul>
     <p class="citation mt-4">
-      Status is derived from each state's allowed and prohibited lists. "Unclear" means the
-      category is not named in the official list — confirm with the cited state page.
+      Status is derived from each state's allowed and prohibited lists. "Allowed with limits" means
+      both lists name items in this category. "Unclear" means the category is not named in the
+      official list — confirm with the cited state page.
     </p>
 
     <div class="mt-10">
@@ -57,7 +58,7 @@ const rows = STATES.map((s) => ({ state: s, status: statusForFood(s, food) }));
       <ul class="mt-3 grid grid-cols-2 gap-2 text-sm md:grid-cols-3">
         {FOODS.filter((f) => f.slug !== food.slug).map((f) => (
           <li>
-            <a href={`/foods/${f.slug}`}>{f.name}</a>
+            <a href={`/foods/${f.slug}/`}>{f.name}</a>
           </li>
         ))}
       </ul>

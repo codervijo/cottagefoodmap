@@ -89,7 +89,7 @@ export function StatesList({ states }: { states: StateLaw[] }) {
       <ul className="mt-8 divide-y divide-rule border-t border-rule">
         {filtered.map((s) => (
           <li key={s.slug} className="py-4">
-            <a href={`/states/${s.slug}`} className="no-underline">
+            <a href={`/states/${s.slug}/`} className="no-underline">
               <div className="flex flex-wrap items-baseline justify-between gap-2">
                 <h2 className="font-serif text-xl text-foreground">
                   {s.name} <span className="citation">/{s.abbreviation}</span>

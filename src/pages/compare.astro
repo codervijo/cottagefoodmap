@@ -15,7 +15,7 @@ function cell(f, render) {
     slot="head"
     title="Compare Cottage Food Laws Across U.S. States"
     description="Side-by-side comparison of cottage food laws: permits, sales caps, online sales, training, and inspections."
-    path="/compare"
+    path="/compare/"
   />
 
   <div class="container-prose py-10">
@@ -44,7 +44,7 @@ function cell(f, render) {
             return (
               <tr class="border-t border-rule align-top">
                 <td class="px-3 py-3">
-                  <a href={`/states/${s.slug}`} class="font-medium no-underline">{s.name}</a>
+                  <a href={`/states/${s.slug}/`} class="font-medium no-underline">{s.name}</a>
                   <div class="citation">/{s.abbreviation}</div>
                 </td>
                 <td class="px-3 py-3">{cell(s.permit_required, (v) => (v ? "Yes" : "No"))}</td>

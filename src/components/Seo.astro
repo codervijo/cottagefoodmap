@@ -6,7 +6,7 @@ const {
   ogType = "website",
 } = Astro.props;
 const site = "https://cottagefoodmap.com";
-const url = site + path;
+const url = site + (path.endsWith("/") ? path : path + "/");
 ---
 <title>{title}</title>
 <meta name="description" content={description} />

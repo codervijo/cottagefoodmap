@@ -8,6 +8,9 @@ export default defineConfig({
   site: 'https://cottagefoodmap.com',
   integrations: [sitemap(), react()],
   output: 'static',
+  // Cloudflare serves directory-format pages at /path/ and 308s /path → /path/.
+  // Keep canonicals, internal links, and the sitemap on the final 200 URL.
+  trailingSlash: 'always',
   vite: {
     plugins: [tailwindcss()],
   },

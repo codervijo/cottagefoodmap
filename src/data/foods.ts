@@ -57,22 +57,38 @@ export const FOODS_BY_SLUG: Record<string, FoodCategory> = Object.fromEntries(
   FOODS.map((f) => [f.slug, f]),
 );
 
-export type FoodStatus = "allowed" | "prohibited" | "unclear";
+export type FoodStatus = "allowed" | "restricted" | "prohibited" | "unclear";
 
 import type { StateLaw } from "./schema";
 import { isUnverified } from "./schema";
 
-export function statusForFood(state: StateLaw, food: FoodCategory): FoodStatus {
+// The state's own allowed/prohibited list items that name this category.
+export function foodMatches(
+  state: StateLaw,
+  food: FoodCategory,
+): { allowed: string[]; prohibited: string[] } {
   const allowed = isUnverified(state.allowed_foods) ? [] : state.allowed_foods.value;
   const prohibited = isUnverified(state.prohibited_foods) ? [] : state.prohibited_foods.value;
-  const matches = (list: string[]) =>
-    list.some((item) =>
+  const hits = (list: string[]) =>
+    list.filter((item) =>
       food.match.some((m) => item.toLowerCase().includes(m.toLowerCase())),
     );
-  const isProhibited = matches(prohibited);
-  const isAllowed = matches(allowed);
-  // Prohibited takes precedence (e.g., NY chocolate-candy carveout)
-  if (isProhibited) return "prohibited";
-  if (isAllowed) return "allowed";
+  return { allowed: hits(allowed), prohibited: hits(prohibited) };
+}
+
+export function statusForFood(state: StateLaw, food: FoodCategory): FoodStatus {
+  const { allowed, prohibited } = foodMatches(state, food);
+  // Both lists name the category (e.g., CA allows baked goods but prohibits
+  // cream-filled ones) — allowed only within the listed limits.
+  if (allowed.length && prohibited.length) return "restricted";
+  if (prohibited.length) return "prohibited";
+  if (allowed.length) return "allowed";
   return "unclear";
 }
+
+export const STATUS_ANSWER: Record<FoodStatus, string> = {
+  allowed: "Yes",
+  restricted: "Yes, with limits",
+  prohibited: "No",
+  unclear: "Unclear",
+};

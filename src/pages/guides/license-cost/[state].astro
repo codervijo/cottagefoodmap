@@ -4,6 +4,7 @@ import Seo from "../../../components/Seo.astro";
 import Disclaimer from "../../../components/Disclaimer.astro";
 import { STATES } from "../../../data/states";
 import { isUnverified } from "../../../data/schema";
+import { costTitle, joinPhrases, permitPhrase } from "../../../data/phrases";
 
 export function getStaticPaths() {
   return STATES.map((state) => ({ params: { state: state.slug }, props: { state } }));
@@ -17,15 +18,17 @@ let answer = "Unverified — check the official source below.";
 if (!isUnverified(cost)) {
   if (cost.value === "none") answer = `${state.name} does not charge a state cottage food license fee.`;
   else if (cost.value === "varies") answer = `${state.name} sets cottage food fees at the local level — they vary by jurisdiction.`;
+  else if (cost.value === 0) answer = `${state.name}'s cottage food permit or exemption is free.`;
   else answer = `${state.name} charges $${cost.value.toLocaleString()} for a cottage food license.`;
 }
+const titleAnswer = costTitle(state);
 ---
 <Layout>
   <Seo
     slot="head"
-    title={`Cottage Food License Cost in ${state.name}`}
-    description={`What does a cottage food license cost in ${state.name}? Sourced answer with citation to the official state agency.`}
-    path={`/guides/license-cost/${state.slug}`}
+    title={`Cottage Food License Cost in ${state.name}${titleAnswer ? `: ${titleAnswer}` : ""}`}
+    description={`${answer} ${joinPhrases([permitPhrase(state)])} Sourced to the official state agency.`}
+    path={`/guides/license-cost/${state.slug}/`}
     ogType="article"
   />
 
@@ -59,7 +62,7 @@ if (!isUnverified(cost)) {
     </div>
 
     <p class="mt-8 text-sm">
-      See the full <a href={`/states/${state.slug}`}>{state.name} cottage food page</a>{" "}
+      See the full <a href={`/states/${state.slug}/`}>{state.name} cottage food page</a>{" "}
       for permit details, sales cap, allowed foods, and labeling rules.
     </p>
   </article>

@@ -65,3 +65,12 @@ The high-volume generic head terms ("texas cottage food law") are increasingly a
 - **Action:** project scaffolded via `portfolio new bootstrap`; first deploy pending. After deploy: verify in GSC as `sc-domain:cottagefoodmap.com` and submit the sitemap.
 - **Result:** TBD — review 2026-07-07
 - **Learning:** TBD
+
+## 2026-09-15 — Trailing-slash canonicals + answer-first guide titles
+- **Status:** active
+- **Hypothesis:** Guide pages already rank on page 1 but don't get clicks because the title only repeats the question. Putting the answer (plus permit/fee/cap) in the title and description lifts CTR. Separately, pointing canonicals and internal links at the final `/path/` URL merges the duplicate slash/no-slash URLs GSC reports, and gets `/foods/` indexed.
+- **KPI:** site CTR; CTR on `/guides/sell/coffee-and-tea/{california,texas}/`; `/foods` coverage in GSC; no more duplicate `/states/<x>` vs `/states/<x>/` rows in the GSC page report.
+- **Baseline (GSC 28d to 2026-09-12):** site 630 imp · 3 clicks · 0.5% CTR · avg pos 28.8. `coffee-and-tea/california/` 172 imp · 1 click · pos 8.7. `coffee-and-tea/texas/` 82 imp · 0 clicks · pos 9.9. `/foods` = "Page with redirect" (not indexed). `project check`: CHECK_161 — 48 canonicals 308.
+- **Action:** `trailingSlash: 'always'`; canonicals and all internal links now end in `/`. "Can I sell X" titles end with Yes / Yes, with limits / No / Unclear, and descriptions add permit · fee · sales cap from the state data. License-cost titles include the cost. Also fixed the matcher: a food named on both lists was marked "prohibited", so CA/FL/NY/OH baked goods and OH coffee showed "No". It's now "restricted" ("Yes, with limits"), and the page lists the matched items with their sources.
+- **Result:** TBD — review 2026-10-13
+- **Learning:** TBD

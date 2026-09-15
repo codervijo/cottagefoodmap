@@ -8,7 +8,7 @@ import { FOODS } from "../../data/foods";
     slot="head"
     title="Cottage Food Categories — Where Each Food Is Allowed"
     description="Browse cottage food categories — jams, baked goods, candy, honey, pickles — and see where each is allowed or prohibited."
-    path="/foods"
+    path="/foods/"
   />
 
   <div class="container-prose py-10">
@@ -20,7 +20,7 @@ import { FOODS } from "../../data/foods";
     <ul class="mt-8 divide-y divide-rule border-t border-rule">
       {FOODS.map((f) => (
         <li class="py-4">
-          <a href={`/foods/${f.slug}`} class="no-underline">
+          <a href={`/foods/${f.slug}/`} class="no-underline">
             <h2 class="font-serif text-xl text-foreground">{f.name}</h2>
           </a>
           <p class="mt-1 text-sm text-muted-foreground">{f.description}</p>

@@ -59,10 +59,10 @@ const description =
         agency, statute, or official PDF it came from, with a verification date.
       </p>
       <div class="mt-6 flex flex-wrap gap-3">
-        <a href="/states" class="rounded border border-primary bg-primary px-4 py-2 text-sm font-medium text-primary-foreground no-underline hover:no-underline">
+        <a href="/states/" class="rounded border border-primary bg-primary px-4 py-2 text-sm font-medium text-primary-foreground no-underline hover:no-underline">
           Browse states
         </a>
-        <a href="/compare" class="rounded border border-border bg-background px-4 py-2 text-sm font-medium text-foreground no-underline hover:bg-muted">
+        <a href="/compare/" class="rounded border border-border bg-background px-4 py-2 text-sm font-medium text-foreground no-underline hover:bg-muted">
           Compare side by side
         </a>
       </div>
@@ -76,7 +76,7 @@ const description =
       <ul class="mt-4 grid grid-cols-2 gap-x-6 gap-y-2 text-sm md:grid-cols-3">
         {STATES.map((s) => (
           <li>
-            <a href={`/states/${s.slug}`} class="no-underline">
+            <a href={`/states/${s.slug}/`} class="no-underline">
               {s.name} <span class="citation">/{s.abbreviation}</span>
             </a>
           </li>
@@ -89,7 +89,7 @@ const description =
       <ul class="mt-4 grid grid-cols-2 gap-x-6 gap-y-2 text-sm md:grid-cols-3">
         {FOODS.map((f) => (
           <li>
-            <a href={`/foods/${f.slug}`} class="no-underline">{f.name}</a>
+            <a href={`/foods/${f.slug}/`} class="no-underline">{f.name}</a>
           </li>
         ))}
       </ul>

@@ -91,18 +91,18 @@ export function StateDetail({ state }: { state: StateLaw }) {
         <h2 className="font-serif text-xl">Related</h2>
         <ul className="mt-3 grid grid-cols-1 gap-2 text-sm md:grid-cols-2">
           <li>
-            <a href={`/guides/license-cost/${state.slug}`}>
+            <a href={`/guides/license-cost/${state.slug}/`}>
               Cottage food license cost in {state.name}
             </a>
           </li>
           <li>
-            <a href={`/guides/labeling/${state.slug}`}>
+            <a href={`/guides/labeling/${state.slug}/`}>
               Cottage food labeling requirements in {state.name}
             </a>
           </li>
           {otherStates.map((s) => (
             <li key={s.slug}>
-              <a href={`/states/${s.slug}`}>Compare with {s.name}</a>
+              <a href={`/states/${s.slug}/`}>Compare with {s.name}</a>
             </li>
           ))}
         </ul>
