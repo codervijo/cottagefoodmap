@@ -68,7 +68,7 @@ Two-level versioning convention (canonical: `sites/portfolio/AI_AGENTS.md`):
 | **v0.A** | scaffolded | `portfolio new bootstrap` ran; standard files written; git initialized | ✅ |
 | **v1.A** | plan v1 | this PRD: problem, users, goals, v1–v5 roadmap; open decisions assigned to the phase that needs them (§6) | ✅ |
 | **v1.B** | Astro port + SEO baseline | TanStack Start → Astro static (`181289c`); 63 prerendered pages (5 states × state, license-cost, labeling, 7 food guides; food categories; compare); trailing-slash canonicals + internal links; answer-first guide titles/descriptions; food-status matcher fix — category on both lists is "restricted", not "prohibited" (`82e94eb`) | ✅ |
-| **v1.C** | CI green | commit `pnpm-lock.yaml` (CI runs `--frozen-lockfile`); fix vitest environment (`jsdom` not installed); CI passes on push | planned |
+| **v1.C** | CI green | commit `pnpm-lock.yaml` (CI runs `--frozen-lockfile`); vitest environment `jsdom` → `node` (no DOM tests; `jsdom` was never installed); CI passes on push | 🚧 |
 | **v1.D** | re-verification pass | all 60 facts (5 states × 12) re-checked against primary sources; values corrected, `last_verified` updated only after a real check; unconfirmable facts → `Unverified`; stale source URLs fixed (e.g. `FL_STATUTE` pinned to the 2023 edition) | planned |
 | **v1.E** | unknown URL handling | unknown URLs return HTTP 404 with a `404.astro` page (links to states, foods, guides) instead of 200 + home page; replace `not_found_handling: "single-page-application"` in `wrangler.jsonc`; verify on the live site | planned |
 | **v2.A** | plan v2 | resolve the v2 open questions in §6; define v2 build phases | planned |
