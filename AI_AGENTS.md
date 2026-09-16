@@ -196,6 +196,13 @@ doubt, the canonical statement is `sites/portfolio/AI_AGENTS.md`.
 Track this project's progress in `docs/prd.md` against this taxonomy. v0.A is
 the bootstrap (this scaffold); v1.A is the first real shipped capability.
 
+## Answering style
+
+Be brief and to the point. Answer the question first, report what changed and
+anything blocking, and stop. No preamble, no recap, no restating the task.
+Prefer a few bullets over paragraphs; escalate to tables or sections only for
+planning artifacts (PRD, ADR, phase proposals) or on request.
+
 ## Conventions
 
 - Stack: astro

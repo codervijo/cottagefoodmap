@@ -71,10 +71,13 @@ Two-level versioning convention (canonical: `sites/portfolio/AI_AGENTS.md`):
 | **v1.C** | CI green | commit `pnpm-lock.yaml` (CI runs `--frozen-lockfile`); vitest environment `jsdom` → `node` (no DOM tests; `jsdom` was never installed); CI passes on push (`e3a28ae`) | ✅ |
 | **v1.D** | re-verification pass | all 60 facts (5 states × 12) re-checked against primary sources; values corrected, `last_verified` updated only after a real check; unconfirmable facts → `Unverified`; stale source URLs fixed (e.g. `FL_STATUTE` pinned to the 2023 edition). Done 2026-09-15: all 5 states rewritten from official sources; TX updated for SB 541 (cap $150,000, any food except 6 categories, new label disclosure, wholesale to vendors); CA 2026 CPI caps ($88,878 / $177,756); dead source URLs replaced (NY, OH, TX agency pages); unsourced figures removed; sales channels an official source doesn't address shown as "Not addressed" | ✅ |
 | **v1.E** | unknown URL handling | unknown URLs return HTTP 404 with a `404.astro` page (links to states, foods, guides) instead of 200 + home page; replace `not_found_handling: "single-page-application"` in `wrangler.jsonc`; verified live 2026-09-15 (`081190c`) | ✅ |
+| **v1.F** | conformance + SEO gaps | `og:image`; analytics (no data on CTR changes without it); home `<title>` under 60 chars; `tsconfig.json`; rename git remote to the full domain (CHECK_040); BreadcrumbList schema | planned |
 | **v2.A** | plan v2 | resolve the v2 open questions in §6; define v2 build phases | planned |
 | **v3.A** | plan v3 | resolve the v3 open questions in §6; define v3 build phases | planned |
 | **v4.A** | plan v4 | resolve the v4 open questions in §6; define v4 build phases | planned |
 | **v5.A** | plan v5 | resolve the v5 open questions in §6; define v5 build phases | planned |
+| **v5.B** | food-status data | replace text matching with explicit per-category status + source in each `StateLaw` (tracked refactor: matches are loose, e.g. FL "dried goods" is "with limits" because dried meat is prohibited) | planned |
+| **v5.C** | head-tag consolidation | one head component: `Layout.astro` and `Seo.astro` both emit `og:type`; `index.astro` hand-writes its own head (tracked refactor) | planned |
 
 ## 6. Open questions
 
@@ -87,6 +90,8 @@ Two-level versioning convention (canonical: `sites/portfolio/AI_AGENTS.md`):
 - **v3** — Scope of "all 50": include DC and territories?
 - **v3** — How to model states with no statewide cottage food law, or with local-only rules.
 - **v3** — Compare view at 50 states: layout and filtering.
+- **v4** — Fetch-hostile official sources the watcher must handle: cdph.ca.gov (incomplete TLS chain), agriculture.ny.gov (403 to non-browser clients), statutes.capitol.texas.gov (JS-only; use tcss.legis.texas.gov), agri.ohio.gov (404s some non-browser requests).
+- **v4** — Texas publishes a CPI-adjusted sales cap annually but none was found on official sources (2026-09-15); the site shows the statutory $150,000. Where should the watcher look?
 - **v4** — Staleness threshold: 90, 180, or 365 days?
 - **v4** — Where the source watcher runs: GitHub Actions cron in this repo, or a fleet-wide `portfolio`/`lamill` command?
 - **v4** — Staleness report in the build: warn only, or fail?
