@@ -32,3 +32,7 @@ to surface "last AI prompt" per project. Keep entries append-only.
 ## 2026-09-22 — v1.G–v1.K planned; v1.F started
 
 > Legislative change tracker requested; per the new global rule (new feature → place in PRD first), it was slotted as v1.G–v1.K after v1.F (option A). "commit and start v1.F": og:image, home title < 60, tsconfig.json, BreadcrumbList, env-gated GA4. Waiting on the operator: GA4 measurement ID, GitHub repo rename (CHECK_040).
+
+## 2026-09-22 — v1.F partial, pushed; session paused
+
+> Home description no longer claims "every U.S. state" (count from `STATES.length`). v1.F committed (`fdf1217`) and pushed. Remaining v1.F items are in prd.md §6: the GA4 measurement ID and CF env var, and the GitHub repo rename (CHECK_040). Next after v1.F: v1.G (its open questions are also in §6).
