@@ -29,6 +29,7 @@ const titleAnswer = costTitle(state);
     title={`Cottage Food License Cost in ${state.name}${titleAnswer ? `: ${titleAnswer}` : ""}`}
     description={`${answer} ${joinPhrases([permitPhrase(state)])} Sourced to the official state agency.`}
     path={`/guides/license-cost/${state.slug}/`}
+    crumb={`License cost in ${state.name}`}
     ogType="article"
   />
 

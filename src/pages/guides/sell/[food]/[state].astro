@@ -61,6 +61,7 @@ const prohibitedFact = state.prohibited_foods;
     title={`Can I sell ${foodName} from home in ${state.name}? ${STATUS_ANSWER[status]}`}
     description={`${STATUS_ANSWER[status]}. ${shortAnswer} ${rules}`.trim()}
     path={`/guides/sell/${food.slug}/${state.slug}/`}
+    crumb={`Selling ${foodName} in ${state.name}`}
     ogType="article"
   />
 

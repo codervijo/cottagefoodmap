@@ -25,14 +25,14 @@ src/data/phrases.ts ───┘                                            dist
 | `src/data/foods.ts` | 7 `FoodCategory` entries with substring `match` terms; `foodMatches`, `statusForFood`, `STATUS_ANSWER` |
 | `src/data/format.ts` | Shared display strings: `channelLabel` (Yes / No / No — not authorized / Not addressed), `capLabel` (all tiers), `capAmounts` |
 | `src/data/phrases.ts` | Short data-derived phrases for titles/descriptions (`permitPhrase`, `costPhrase`, `costTitle`, `capPhrase`, `joinPhrases`); unverified facts return `null` |
-| `src/layouts/Layout.astro` | HTML shell, header nav, footer disclaimer, site-wide `WebSite` JSON-LD |
-| `src/components/Seo.astro` | Per-page `<title>`, description, canonical (forced trailing slash), Open Graph |
+| `src/layouts/Layout.astro` | HTML shell, header nav, footer disclaimer, site-wide `WebSite` JSON-LD, `og:image` (`/og.png`), GA4 (only when `PUBLIC_GA_ID` is set at build) |
+| `src/components/Seo.astro` | Per-page `<title>`, description, canonical (forced trailing slash), Open Graph, BreadcrumbList JSON-LD (Home › section index › page; `crumb` prop names the page) |
 | `src/components/StateDetail.tsx` | React: full state page body (rendered to static HTML) |
 | `src/components/StatesList.tsx` | React island (`client:load`) on `/states/` — client-side filtering |
 | `src/components/Fact.tsx` | React: renders one `Fact<T>` with source link and verified date |
 | `src/components/Disclaimer.astro` / `.tsx` | "Not legal advice" notice |
 | `src/pages/` | Routes — see §4 |
-| `src/__tests__/` | Vitest: `seo.test.js`, `trailing-slash.test.js`, `foods.test.ts`, `smoke.test.js` |
+| `src/__tests__/` | Vitest: `seo.test.js`, `trailing-slash.test.js`, `foods.test.ts`, `smoke.test.js`, `built-head.test.js` (reads `dist/`; run after build) |
 | `genai/` | Original Lovable/TanStack Start export the Astro port was translated from (v1.B). Reference only; not built |
 | `public/` | `_headers` (cache + security headers), `robots.txt`, `favicon.svg`, IndexNow key file |
 

@@ -4,9 +4,23 @@ const {
   description,
   path,
   ogType = "website",
+  crumb,
 } = Astro.props;
 const site = "https://cottagefoodmap.com";
 const url = site + (path.endsWith("/") ? path : path + "/");
+
+// BreadcrumbList: Home › section index (for pages under /states/, /foods/, /guides/) › this page.
+// Every crumb is a real, indexable URL.
+const SECTIONS: Record<string, string> = { states: "States", foods: "Foods", guides: "Guides" };
+const segs = url.slice(site.length).split("/").filter(Boolean);
+const crumbs = [{ name: "Home", url: site + "/" }];
+if (segs.length > 1 && SECTIONS[segs[0]]) crumbs.push({ name: SECTIONS[segs[0]], url: `${site}/${segs[0]}/` });
+crumbs.push({ name: crumb ?? title, url });
+const breadcrumbLd = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: crumbs.map((c, i) => ({ "@type": "ListItem", position: i + 1, name: c.name, item: c.url })),
+};
 ---
 <title>{title}</title>
 <meta name="description" content={description} />
@@ -15,3 +29,4 @@ const url = site + (path.endsWith("/") ? path : path + "/");
 <meta property="og:title" content={title} />
 <meta property="og:description" content={description} />
 <meta property="og:url" content={url} />
+<script type="application/ld+json" set:html={JSON.stringify(breadcrumbLd)} />

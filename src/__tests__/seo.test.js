@@ -28,8 +28,9 @@ describe('SEO baseline (src/pages/index.astro)', () => {
     expect(html).toMatch(/property="og:url"/);
   });
 
-  it('has Twitter card meta', () => {
-    expect(html).toMatch(/name="twitter:card"/);
+  it('has Twitter card meta (site-wide, from Layout.astro)', () => {
+    const layout = readFileSync(join(process.cwd(), 'src', 'layouts', 'Layout.astro'), 'utf8');
+    expect(layout).toMatch(/name="twitter:card"\s+content="summary_large_image"/);
   });
 
   it('has favicon link', () => {

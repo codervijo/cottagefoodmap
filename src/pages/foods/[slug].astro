@@ -18,6 +18,7 @@ const rows = STATES.map((s) => ({ state: s, status: statusForFood(s, food) }));
     title={`${food.name} as a Cottage Food — Where It's Allowed`}
     description={`Where you can legally sell ${food.name.toLowerCase()} as a cottage food. State-by-state status with sources.`}
     path={`/foods/${food.slug}/`}
+    crumb={food.name}
     ogType="article"
   />
 

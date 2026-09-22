@@ -28,3 +28,7 @@ to surface "last AI prompt" per project. Keep entries append-only.
 ## 2026-09-22 — BUG-001 / BUG-002: CA cap tiers, FL out-of-state shipping
 
 > Operator reported two live errors: FL "Out-of-state shipping: Yes" and a CA state page stuck at $150,000 while compare showed $177,756. Findings: compare and the state pages share one data source; the CA report came from the pre-v1.D `genai/` export and isn't served. Operator decisions: FL → `not_authorized` (new third `ChannelStatus` value, "No — not authorized"); CA → per-tier `SalesCapTier` with its own source and verified date, and compare shows every tier. CA caps re-verified against the CDPH 2026 PDF. New `docs/bugs.md`, ADR-007, v4 open question for CPI change detection.
+
+## 2026-09-22 — v1.G–v1.K planned; v1.F started
+
+> Legislative change tracker requested; per the new global rule (new feature → place in PRD first), it was slotted as v1.G–v1.K after v1.F (option A). "commit and start v1.F": og:image, home title < 60, tsconfig.json, BreadcrumbList, env-gated GA4. Waiting on the operator: GA4 measurement ID, GitHub repo rename (CHECK_040).

@@ -16,6 +16,7 @@ const { state } = Astro.props;
     title={`${state.name} Cottage Food Law — Permits, Sales Cap, Allowed Foods`}
     description={`Cottage food law in ${state.name}: permit requirements, license cost, sales cap, allowed and prohibited foods, labeling, and sales channels. Sourced.`}
     path={`/states/${state.slug}/`}
+    crumb={state.name}
     ogType="article"
   />
 

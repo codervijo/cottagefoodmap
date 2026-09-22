@@ -5,9 +5,11 @@ import { STATES } from "../data/states";
 import { FOODS } from "../data/foods";
 
 const site = "https://cottagefoodmap.com";
-const title = "Cottage Food Law /US — Sourced reference to home-food rules in every state";
+const title = "Cottage Food Law /US — Sourced Home-Food Rules by State";
+// State count comes from the data, so it stays true as states are added (v2: 20, v3: all 50).
 const description =
-  "Permits, sales caps, allowed foods, labeling, and sales channels for cottage food operations in every U.S. state. Every fact links to an official source.";
+  `Permits, sales caps, allowed foods, labeling, and sales channels for cottage food operations in ${STATES.length} U.S. states so far, with the rest being added. Every fact links to an official source.`;
+const shortDescription = `Sourced home-food rules for ${STATES.length} U.S. states so far, with more being added.`;
 ---
 <Layout>
   <Fragment slot="head">
@@ -18,13 +20,12 @@ const description =
 
     <meta property="og:type" content="website" />
     <meta property="og:title" content="Cottage Food Law /US" />
-    <meta property="og:description" content="Sourced reference to home-food rules in every U.S. state." />
+    <meta property="og:description" content={shortDescription} />
     <meta property="og:url" content={site + "/"} />
     <meta property="og:site_name" content="Cottage Food Law /US" />
 
-    <meta name="twitter:card" content="summary" />
     <meta name="twitter:title" content="Cottage Food Law /US" />
-    <meta name="twitter:description" content="Sourced reference to home-food rules in every U.S. state." />
+    <meta name="twitter:description" content={shortDescription} />
 
     <script type="application/ld+json" set:html={JSON.stringify({
       "@context": "https://schema.org",
