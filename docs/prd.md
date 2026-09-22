@@ -4,7 +4,7 @@ prd_version: 2
 project_version: v1.B
 status: active
 owner: Vijo
-last_updated: 2026-09-15
+last_updated: 2026-09-22
 ---
 
 # cottagefoodmap.com — PRD
@@ -55,7 +55,7 @@ Two-level versioning convention (canonical: `sites/portfolio/AI_AGENTS.md`):
 | Version | Theme | Acceptance |
 |---|---|---|
 | v0 | scaffold | local builds, CF wrangler.jsonc + public/_headers in place, repo initialized |
-| v1 | 5 states, trustworthy and fresh | CA, FL, NY, OH, TX live; every fact re-verified against its primary source (or marked `Unverified`); no known wrong answers; unknown URLs return a real 404; CI green |
+| v1 | 5 states, trustworthy and fresh | CA, FL, NY, OH, TX live; every fact re-verified against its primary source (or marked `Unverified`); no known wrong answers; unknown URLs return a real 404; CI green; a sourced legislative change tracker (enacted and pending) for the 5 states |
 | v2 | 20 states | 15 more states at the v1 data standard |
 | v3 | all 50 states | remaining 30 states at the v1 data standard |
 | v4 | freshness | stale facts flagged automatically; source changes detected on a schedule; freshness exposed to search engines; public changelog of verified changes |
@@ -72,6 +72,11 @@ Two-level versioning convention (canonical: `sites/portfolio/AI_AGENTS.md`):
 | **v1.D** | re-verification pass | all 60 facts (5 states × 12) re-checked against primary sources; values corrected, `last_verified` updated only after a real check; unconfirmable facts → `Unverified`; stale source URLs fixed (e.g. `FL_STATUTE` pinned to the 2023 edition). Done 2026-09-15: all 5 states rewritten from official sources; TX updated for SB 541 (cap $150,000, any food except 6 categories, new label disclosure, wholesale to vendors); CA 2026 CPI caps ($88,878 / $177,756); dead source URLs replaced (NY, OH, TX agency pages); unsourced figures removed; sales channels an official source doesn't address shown as "Not addressed" | ✅ |
 | **v1.E** | unknown URL handling | unknown URLs return HTTP 404 with a `404.astro` page (links to states, foods, guides) instead of 200 + home page; replace `not_found_handling: "single-page-application"` in `wrangler.jsonc`; verified live 2026-09-15 (`081190c`) | ✅ |
 | **v1.F** | conformance + SEO gaps | `og:image`; analytics (no data on CTR changes without it); home `<title>` under 60 chars; `tsconfig.json`; rename git remote to the full domain (CHECK_040); BreadcrumbList schema | planned |
+| **v1.G** | change data model | `LawChange` dataset under `src/data/changes/` reusing `Fact<>` (instrument, status, effective date, summary, field changes with from → to); stable per-fact anchors on state pages from one `FACT_ANCHORS` map (`#fact-<field>`); drift test: newest effective change per field must match the current `StateLaw` value; test that all 63 baseline sitemap URLs still resolve | planned |
+| **v1.H** | legislative research | history of each state's cottage food law, from its origin to the present, plus pending bills, for CA, FL, NY, OH, TX; primary sources only (bill text, statute, session law, agency notice, register); unsourceable items go in a gap log in `docs/changes-research.md`, not into the data; operator reviews | planned |
+| **v1.I** | change pages + linking | `/changes/` (all states, newest first, filter by state and year, pending bills marked "Not law"); `/changes/<state>/`; "Changes" in the main nav; home "Recent law changes" module; state-page "Recent changes" module with 2–3 entries inline; each entry deep-links to the fact it changed; new pages in the sitemap; no existing URL moves | planned |
+| **v1.J** | feed, JSON, structured data | `/changes/feed.xml` (Atom); `/changes.json` with schema version and license; `Dataset` JSON-LD on `/changes/`, `Legislation` per entry, BreadcrumbList | planned |
+| **v1.K** | link-audit fixes *(optional)* | state pages link to their 7 "can I sell" guides; those guides currently have 1 in-content inbound link each | planned |
 | **v2.A** | plan v2 | resolve the v2 open questions in §6; define v2 build phases | planned |
 | **v3.A** | plan v3 | resolve the v3 open questions in §6; define v3 build phases | planned |
 | **v4.A** | plan v4 | resolve the v4 open questions in §6; define v4 build phases | planned |
@@ -84,6 +89,9 @@ Two-level versioning convention (canonical: `sites/portfolio/AI_AGENTS.md`):
 - *(append-only log; mark answered with date but never delete)*
 - **v1.D** — Re-verification method: operator verifies each fact, or Claude drafts from the source and the operator approves? — *answered 2026-09-15:* Claude researched each state from official sources, re-fetched and checked every key quote before editing, and the operator reviews the diff.
 - **v1.D** — "Unclear" food statuses (honey in NY/OH/TX, coffee & tea in NY): research and add explicit data, or leave as unclear? — *answered 2026-09-15:* researched. TX allows any food except 6 categories (honey, coffee, tea allowed). OH: only flavored honey from exempt beekeepers ("Yes, with limits"); coffee and dry tea blends allowed. NY: honey is under a separate exemption (stays unclear, with reason); beverages and coffee roasting prohibited. FL: coffee and tea are not on the FDACS list (now unclear).
+- **v1.G** — Approve the `LawChange` shape, the separate-dataset-plus-drift-test approach, and the `#fact-<field>` anchor scheme (proposed 2026-09-22).
+- **v1.G** — Scope: the tracker records changes to the law only; this site's own data corrections belong in v4's changelog. Confirm.
+- **v1.J** — License for `/changes.json`: CC BY 4.0, CC BY-NC 4.0, or all rights reserved?
 - **v2** — Which 15 states to add, and by what criterion (GSC impressions, keyword demand, population, law clarity)?
 - **v2** — Per-state sourcing workflow: how a new state gets researched, cited, and reviewed.
 - **v2** — Does the 7-category food list or the `StateLaw` schema need to change to fit new states?
