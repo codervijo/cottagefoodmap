@@ -3,6 +3,7 @@ import Layout from "../layouts/Layout.astro";
 import Seo from "../components/Seo.astro";
 import { STATES } from "../data/states";
 import { isUnverified } from "../data/schema";
+import { capLabel, channelLabel } from "../data/format";
 
 function cell(f, render) {
   if (isUnverified(f)) return "—";
@@ -54,12 +55,10 @@ function cell(f, render) {
                   )}
                 </td>
                 <td class="px-3 py-3">
-                  {cell(s.sales_cap_usd_annual, (v) =>
-                    v === "none" ? "No cap" : `$${v.toLocaleString()}`,
-                  )}
+                  {cell(s.sales_cap_usd_annual, capLabel)}
                 </td>
-                <td class="px-3 py-3">{ch ? (ch.online_in_state === null ? "Not addressed" : ch.online_in_state ? "Yes" : "No") : "—"}</td>
-                <td class="px-3 py-3">{ch ? (ch.online_out_of_state === null ? "Not addressed" : ch.online_out_of_state ? "Yes" : "No") : "—"}</td>
+                <td class="px-3 py-3">{ch ? channelLabel(ch.online_in_state) : "—"}</td>
+                <td class="px-3 py-3">{ch ? channelLabel(ch.online_out_of_state) : "—"}</td>
                 <td class="px-3 py-3">{cell(s.training_required, (v) => (v ? "Yes" : "No"))}</td>
                 <td class="px-3 py-3">{cell(s.inspection_required, (v) => (v ? "Yes" : "No"))}</td>
               </tr>

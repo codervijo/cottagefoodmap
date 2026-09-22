@@ -1,6 +1,7 @@
 import { useState, useMemo } from "react";
 import type { StateLaw } from "../data/schema";
 import { isUnverified } from "../data/schema";
+import { capAmounts, capLabel } from "../data/format";
 
 export function StatesList({ states }: { states: StateLaw[] }) {
   const [q, setQ] = useState("");
@@ -22,8 +23,8 @@ export function StatesList({ states }: { states: StateLaw[] }) {
         if (isUnverified(s.sales_channels)) return false;
         const v = s.sales_channels.value.online_in_state;
         if (v === null) return false;
-        if (online === "yes" && !v) return false;
-        if (online === "no" && v) return false;
+        if (online === "yes" && v !== true) return false;
+        if (online === "no" && v === true) return false;
       }
       if (capBand !== "all") {
         if (isUnverified(s.sales_cap_usd_annual)) return false;
@@ -31,9 +32,10 @@ export function StatesList({ states }: { states: StateLaw[] }) {
         if (capBand === "none" && cap !== "none") return false;
         if (capBand !== "none") {
           if (cap === "none") return false;
-          if (capBand === "lt50" && !(cap < 50000)) return false;
-          if (capBand === "50to150" && !(cap >= 50000 && cap <= 150000)) return false;
-          if (capBand === "gt150" && !(cap > 150000)) return false;
+          // A tiered cap matches a band if any tier falls in it.
+          const inBand = (c: number) =>
+            capBand === "lt50" ? c < 50000 : capBand === "50to150" ? c >= 50000 && c <= 150000 : c > 150000;
+          if (!capAmounts(cap).some(inBand)) return false;
         }
       }
       if (foodQ) {
@@ -110,7 +112,7 @@ export function StatesList({ states }: { states: StateLaw[] }) {
                 ? "Cap: unverified"
                 : s.sales_cap_usd_annual.value === "none"
                   ? "No sales cap"
-                  : `Cap $${s.sales_cap_usd_annual.value.toLocaleString()}`}
+                  : `Cap ${capLabel(s.sales_cap_usd_annual.value)}`}
             </p>
           </li>
         ))}

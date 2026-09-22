@@ -1,4 +1,5 @@
-import type { Fact } from "../data/schema";
+import type { ChannelStatus, Fact, SalesCapTier } from "../data/schema";
+import { capLabel, channelLabel, isTiered } from "../data/format";
 import { isUnverified } from "../data/schema";
 import type { ReactNode } from "react";
 
@@ -56,12 +57,31 @@ export function FactRow({ label, fact, render }: FactRowProps) {
   );
 }
 
-export function YesNo({ value }: { value: boolean | null }) {
-  if (value === null) return <span className="badge-chip badge-unverified">Not addressed</span>;
+export function YesNo({ value }: { value: ChannelStatus }) {
+  const cls = value === null ? "badge-unverified" : value === true ? "badge-yes" : "badge-no";
+  return <span className={`badge-chip ${cls}`}>{channelLabel(value)}</span>;
+}
+
+export function SalesCap({ value }: { value: number | "none" | SalesCapTier[] }) {
+  if (!isTiered(value)) return <span>{capLabel(value)}</span>;
   return (
-    <span className={`badge-chip ${value ? "badge-yes" : "badge-no"}`}>
-      {value ? "Yes" : "No"}
-    </span>
+    <ul className="space-y-2">
+      {value.map((t) => (
+        <li key={t.class}>
+          {t.class}: ${t.adjusted_usd.toLocaleString("en-US")}{" "}
+          <span className="text-muted-foreground">
+            (base ${t.base_usd.toLocaleString("en-US")}; in effect from {formatDate(t.effective)})
+          </span>
+          <p className="citation">
+            Source:{" "}
+            <a href={t.source_url} target="_blank" rel="noopener noreferrer">
+              {t.source_title ?? t.source_url}
+            </a>{" "}
+            · Verified {formatDate(t.last_verified)}
+          </p>
+        </li>
+      ))}
+    </ul>
   );
 }
 

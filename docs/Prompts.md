@@ -24,3 +24,7 @@ to surface "last AI prompt" per project. Keep entries append-only.
 ## 2026-09-15 — v1.C, v1.D, v1.E
 
 > "push and do v1.C, v1.D and v1.E - all permissions granted till then". v1.C: tracked `pnpm-lock.yaml`, vitest env `jsdom` → `node`; first green CI (`e3a28ae`). v1.E: `src/pages/404.astro` + `not_found_handling: "404-page"`; unknown URLs verified 404 live (`081190c`). v1.D: 5 parallel research agents checked every fact against official sources; key quotes re-fetched and checked before editing. Rewrote all 5 state files (TX SB 541, CA 2026 caps, dead NY/OH/TX URLs, unsourced ranges removed). Schema: nullable sales channels ("Not addressed"), `allows_all_except_prohibited`, `food_status_overrides`; matcher now matches at word starts.
+
+## 2026-09-22 — BUG-001 / BUG-002: CA cap tiers, FL out-of-state shipping
+
+> Operator reported two live errors: FL "Out-of-state shipping: Yes" and a CA state page stuck at $150,000 while compare showed $177,756. Findings: compare and the state pages share one data source; the CA report came from the pre-v1.D `genai/` export and isn't served. Operator decisions: FL → `not_authorized` (new third `ChannelStatus` value, "No — not authorized"); CA → per-tier `SalesCapTier` with its own source and verified date, and compare shows every tier. CA caps re-verified against the CDPH 2026 PDF. New `docs/bugs.md`, ADR-007, v4 open question for CPI change detection.

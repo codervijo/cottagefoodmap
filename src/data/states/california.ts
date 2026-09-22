@@ -12,6 +12,8 @@ const HSC = (section: string) =>
   `https://leginfo.legislature.ca.gov/faces/codes_displaySection.xhtml?lawCode=HSC&sectionNum=${section}`;
 const CA_STATUTE = HSC("114365");
 const VERIFIED = "2026-09-15";
+const CAPS_VERIFIED = "2026-09-22";
+const CA_CAPS_TITLE = "CDPH — CFO Adjusted Gross Annual Sales Limit (2026)";
 
 export const california: StateLaw = {
   slug: "california",
@@ -46,11 +48,14 @@ export const california: StateLaw = {
     notes: "Fees are set by the local enforcement agency; there is no state fee schedule. Local agencies may add a surcharge for Class B permits.",
   },
   sales_cap_usd_annual: {
-    value: 177756,
-    source_url: CA_CAPS_PDF,
-    source_title: "CDPH — CFO Adjusted Gross Annual Sales Limits (2026)",
-    last_verified: VERIFIED,
-    notes: "Class B limit for 2026; Class A is $88,878. Base limits of $75,000 (A) and $150,000 (B) took effect January 1, 2022 and are adjusted each year for inflation (HSC § 113758).",
+    value: [
+      { class: "Class A", base_usd: 75000, adjusted_usd: 88878, effective: "2026-01-01", source_url: CA_CAPS_PDF, source_title: CA_CAPS_TITLE, last_verified: CAPS_VERIFIED },
+      { class: "Class B", base_usd: 150000, adjusted_usd: 177756, effective: "2026-01-01", source_url: CA_CAPS_PDF, source_title: CA_CAPS_TITLE, last_verified: CAPS_VERIFIED },
+    ],
+    source_url: HSC("113758"),
+    source_title: "Cal. Health & Safety Code § 113758",
+    last_verified: CAPS_VERIFIED,
+    notes: "The statute sets the base limits and requires both to be adjusted each year for inflation (California CPI); CDPH publishes the adjusted limits each January.",
   },
   allowed_foods: {
     value: [

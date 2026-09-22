@@ -92,6 +92,9 @@ Two-level versioning convention (canonical: `sites/portfolio/AI_AGENTS.md`):
 - **v3** — Compare view at 50 states: layout and filtering.
 - **v4** — Fetch-hostile official sources the watcher must handle: cdph.ca.gov (incomplete TLS chain), agriculture.ny.gov (403 to non-browser clients), statutes.capitol.texas.gov (JS-only; use tcss.legis.texas.gov), agri.ohio.gov (404s some non-browser requests).
 - **v4** — Texas publishes a CPI-adjusted sales cap annually but none was found on official sources (2026-09-15); the site shows the statutory $150,000. Where should the watcher look?
+- **v4** — First change-detection target: California `SalesCapTier.adjusted_usd` (CPI-adjusted
+  every January 1; CDPH publishes a new "Adjusted Gross Annual Sales Limit" PDF). Flag once
+  `effective` is more than a year old. (Operator, 2026-09-22.)
 - **v4** — Staleness threshold: 90, 180, or 365 days?
 - **v4** — Where the source watcher runs: GitHub Actions cron in this repo, or a fleet-wide `portfolio`/`lamill` command?
 - **v4** — Staleness report in the build: warn only, or fail?

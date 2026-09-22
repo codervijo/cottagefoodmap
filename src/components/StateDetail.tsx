@@ -1,7 +1,7 @@
 import type { StateLaw } from "../data/schema";
 import { isUnverified } from "../data/schema";
 import { STATES } from "../data/states";
-import { FactRow, YesNo, MoneyOrNone, BulletList } from "./Fact";
+import { FactRow, YesNo, MoneyOrNone, SalesCap, BulletList } from "./Fact";
 import { Disclaimer } from "./Disclaimer";
 
 export function StateDetail({ state }: { state: StateLaw }) {
@@ -26,7 +26,7 @@ export function StateDetail({ state }: { state: StateLaw }) {
         <FactRow
           label="Annual sales cap"
           fact={state.sales_cap_usd_annual}
-          render={(v) => <MoneyOrNone value={v} />}
+          render={(v) => <SalesCap value={v} />}
         />
         <FactRow label="Training required" fact={state.training_required} render={(v) => <YesNo value={v} />} />
         <FactRow label="Home inspection" fact={state.inspection_required} render={(v) => <YesNo value={v} />} />

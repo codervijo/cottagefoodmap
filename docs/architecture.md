@@ -23,6 +23,7 @@ src/data/phrases.ts ───┘                                            dist
 | `src/data/states/<state>.ts` | One `StateLaw` record per state (CA, FL, NY, OH, TX), 12 facts each, all re-verified 2026-09-15 (v1.D) against official sources listed in `sources` |
 | `src/data/states/index.ts` | `STATES` (sorted by name), `STATES_BY_SLUG`, `getState` |
 | `src/data/foods.ts` | 7 `FoodCategory` entries with substring `match` terms; `foodMatches`, `statusForFood`, `STATUS_ANSWER` |
+| `src/data/format.ts` | Shared display strings: `channelLabel` (Yes / No / No — not authorized / Not addressed), `capLabel` (all tiers), `capAmounts` |
 | `src/data/phrases.ts` | Short data-derived phrases for titles/descriptions (`permitPhrase`, `costPhrase`, `costTitle`, `capPhrase`, `joinPhrases`); unverified facts return `null` |
 | `src/layouts/Layout.astro` | HTML shell, header nav, footer disclaimer, site-wide `WebSite` JSON-LD |
 | `src/components/Seo.astro` | Per-page `<title>`, description, canonical (forced trailing slash), Open Graph |
@@ -41,11 +42,17 @@ src/data/phrases.ts ───┘                                            dist
   `source_url` must be an official source (state .gov, statute, official PDF). Unverified facts
   render as gaps; nothing is guessed.
 - **`StateLaw`** fields (12 facts): `program_name`, `agency`, `permit_required`, `permit_details`,
-  `license_cost_usd` (`number | "varies" | "none"`), `sales_cap_usd_annual` (`number | "none"`),
+  `license_cost_usd` (`number | "varies" | "none"`), `sales_cap_usd_annual`
+  (`number | "none" | SalesCapTier[]`),
   `allowed_foods`, `prohibited_foods`, `labeling_requirements`, `sales_channels`,
   `training_required`, `inspection_required`. Plus non-fact `caveats`, `sources`, `last_reviewed`.
-- **`sales_channels`** booleans may be `null` = the official source doesn't address that channel;
-  rendered as "Not addressed", never guessed as yes or no.
+- **`sales_channels`** values are `ChannelStatus` = `boolean | null | "not_authorized"`. `null` =
+  the official source doesn't address that channel ("Not addressed"). `"not_authorized"` = outside
+  what the state law can authorize, e.g. interstate shipping under an in-state exemption
+  ("No — not authorized").
+- **`SalesCapTier`** — for tiered caps (California Class A / B): `class`, `base_usd`,
+  `adjusted_usd`, `effective`, plus its own `source_url` / `last_verified`. The enclosing Fact
+  cites the statute that sets the tiers. Every tier is shown wherever the cap is shown.
 - **`allows_all_except_prohibited`** (optional) — the law allows any food except the prohibited
   list (Texas since SB 541). A food with no prohibited match is then `allowed`.
 - **`food_status_overrides`** (optional, keyed by food slug) — explicit status plus a `reason`
@@ -104,6 +111,11 @@ Cloudflare 308s the slashless form. Enforced by `trailing-slash.test.js`.
 - **ADR-006 (v1.D) — Unaddressed is not no.** When an official source is silent on a sales
   channel, the value is `null` ("Not addressed") rather than an inferred yes/no; figures without
   an official source (e.g. fee ranges, course prices) were removed rather than kept as notes.
+
+- **ADR-007 (BUG-001/002) — Scope limits and tiers are data, not notes.** A state exemption can't
+  authorize out-of-state sales, and "Not addressed" reads as permissive, so the channel status
+  has a third value, `not_authorized`. Tiered caps are stored per tier, not as one number plus
+  prose, because showing only the top tier made California's cap look wrong.
 
 ## 7. Tracked refactors
 

@@ -4,6 +4,7 @@
 
 import type { StateLaw } from "./schema";
 import { isUnverified } from "./schema";
+import { isTiered } from "./format";
 
 export function permitPhrase(state: StateLaw): string | null {
   const f = state.permit_required;
@@ -33,7 +34,11 @@ export function costTitle(state: StateLaw): string | null {
 export function capPhrase(state: StateLaw): string | null {
   const f = state.sales_cap_usd_annual;
   if (isUnverified(f)) return null;
-  return f.value === "none" ? "no sales cap" : `$${f.value.toLocaleString("en-US")}/yr sales cap`;
+  if (f.value === "none") return "no sales cap";
+  if (isTiered(f.value)) {
+    return `sales caps ${f.value.map((t) => `$${t.adjusted_usd.toLocaleString("en-US")} (${t.class})`).join(" / ")}/yr`;
+  }
+  return `$${f.value.toLocaleString("en-US")}/yr sales cap`;
 }
 
 export function joinPhrases(parts: (string | null)[]): string {
