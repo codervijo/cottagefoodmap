@@ -26,7 +26,7 @@ Fields: **Repro** · **Expected** · **Actual** · **Where** · **Severity**
   because silence in a state exemption isn't permission, and "Not addressed" reads as permissive.
   A plain boolean can't carry that distinction, so channels are now a `ChannelStatus` with a
   third value, `"not_authorized"` (ADR-007). NY, OH, TX, and CA were already `false`.
-- **Fixed in** — *uncommitted* (BUG-002)
+- **Fixed in** — `81494f9` (BUG-002)
 
 ### BUG-001 · 2026-09-22 — California sales cap stores one tier; Class A is only in notes
 
@@ -46,4 +46,4 @@ Fields: **Repro** · **Expected** · **Actual** · **Where** · **Severity**
   PDF, effective January 1, 2026: Class A $88,878 and Class B $177,756, from bases of $75,000 and
   $150,000 in HSC § 113758. `adjusted_usd` goes stale every January; it is the first target
   for v4 change detection.
-- **Fixed in** — *uncommitted* (BUG-001)
+- **Fixed in** — `81494f9` (BUG-001)
