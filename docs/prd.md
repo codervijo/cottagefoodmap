@@ -1,10 +1,10 @@
 ---
 project: cottagefoodmap.com
 prd_version: 2
-project_version: v1.B
+project_version: v2.A
 status: active
 owner: Vijo
-last_updated: 2026-09-22
+last_updated: 2026-09-25
 ---
 
 # cottagefoodmap.com — PRD
@@ -55,10 +55,10 @@ Two-level versioning convention (canonical: `sites/portfolio/AI_AGENTS.md`):
 | Version | Theme | Acceptance |
 |---|---|---|
 | v0 | scaffold | local builds, CF wrangler.jsonc + public/_headers in place, repo initialized |
-| v1 | 5 states, trustworthy and fresh | CA, FL, NY, OH, TX live; every fact re-verified against its primary source (or marked `Unverified`); no known wrong answers; unknown URLs return a real 404; CI green; a sourced legislative change tracker (enacted and pending) for the 5 states |
+| v1 | 5 states, trustworthy and fresh | CA, FL, NY, OH, TX live; every fact re-verified against its primary source (or marked `Unverified`); no known wrong answers; unknown URLs return a real 404; CI green |
 | v2 | 20 states | 15 more states at the v1 data standard |
 | v3 | all 50 states | remaining 30 states at the v1 data standard |
-| v4 | freshness | stale facts flagged automatically; source changes detected on a schedule; freshness exposed to search engines; public changelog of verified changes |
+| v4 | freshness | stale facts flagged automatically; source changes detected on a schedule; freshness exposed to search engines; public changelog of verified changes; a sourced legislative change tracker (enacted and pending), moved from v1 on 2026-09-25 |
 | v5 | fact-correctness checks | unit tests that catch wrong or inconsistent facts before they ship (e.g. contradictions between fields, allowed/prohibited conflicts, answers that don't match the data), run in CI |
 
 ## 5. Phases
@@ -71,15 +71,16 @@ Two-level versioning convention (canonical: `sites/portfolio/AI_AGENTS.md`):
 | **v1.C** | CI green | commit `pnpm-lock.yaml` (CI runs `--frozen-lockfile`); vitest environment `jsdom` → `node` (no DOM tests; `jsdom` was never installed); CI passes on push (`e3a28ae`) | ✅ |
 | **v1.D** | re-verification pass | all 60 facts (5 states × 12) re-checked against primary sources; values corrected, `last_verified` updated only after a real check; unconfirmable facts → `Unverified`; stale source URLs fixed (e.g. `FL_STATUTE` pinned to the 2023 edition). Done 2026-09-15: all 5 states rewritten from official sources; TX updated for SB 541 (cap $150,000, any food except 6 categories, new label disclosure, wholesale to vendors); CA 2026 CPI caps ($88,878 / $177,756); dead source URLs replaced (NY, OH, TX agency pages); unsourced figures removed; sales channels an official source doesn't address shown as "Not addressed" | ✅ |
 | **v1.E** | unknown URL handling | unknown URLs return HTTP 404 with a `404.astro` page (links to states, foods, guides) instead of 200 + home page; replace `not_found_handling: "single-page-application"` in `wrangler.jsonc`; verified live 2026-09-15 (`081190c`) | ✅ |
-| **v1.F** | conformance + SEO gaps | `og:image`; analytics (no data on CTR changes without it); home `<title>` under 60 chars; `tsconfig.json`; rename git remote to the full domain (CHECK_040); BreadcrumbList schema. Done 2026-09-22: site-wide `og:image` (`public/og.png`, 1200×630) + `summary_large_image`; home title 73 → 55 chars; home description/og/twitter said "every U.S. state" → "5 U.S. states so far, with the rest being added" (count from `STATES.length`); `tsconfig.json` (astro strict, `tsc --noEmit` clean); BreadcrumbList on every page but home/404 (`Seo.astro`, `crumb` prop); GA4 snippet in `Layout.astro`, injected only when `PUBLIC_GA_ID` is set; `built-head.test.js`. Open: GA4 measurement ID + CF env var; GitHub repo rename | in progress |
-| **v1.G** | change data model | `LawChange` dataset under `src/data/changes/` reusing `Fact<>` (instrument, status, effective date, summary, field changes with from → to); stable per-fact anchors on state pages from one `FACT_ANCHORS` map (`#fact-<field>`); drift test: newest effective change per field must match the current `StateLaw` value; test that all 63 baseline sitemap URLs still resolve | planned |
-| **v1.H** | legislative research | history of each state's cottage food law, from its origin to the present, plus pending bills, for CA, FL, NY, OH, TX; primary sources only (bill text, statute, session law, agency notice, register); unsourceable items go in a gap log in `docs/changes-research.md`, not into the data; operator reviews | planned |
-| **v1.I** | change pages + linking | `/changes/` (all states, newest first, filter by state and year, pending bills marked "Not law"); `/changes/<state>/`; "Changes" in the main nav; home "Recent law changes" module; state-page "Recent changes" module with 2–3 entries inline; each entry deep-links to the fact it changed; new pages in the sitemap; no existing URL moves | planned |
-| **v1.J** | feed, JSON, structured data | `/changes/feed.xml` (Atom); `/changes.json` with schema version and license; `Dataset` JSON-LD on `/changes/`, `Legislation` per entry, BreadcrumbList | planned |
-| **v1.K** | link-audit fixes *(optional)* | state pages link to their 7 "can I sell" guides; those guides currently have 1 in-content inbound link each | planned |
+| **v1.F** | conformance + SEO gaps | `og:image`; analytics (no data on CTR changes without it); home `<title>` under 60 chars; `tsconfig.json`; BreadcrumbList schema. Done 2026-09-22: site-wide `og:image` (`public/og.png`, 1200×630) + `summary_large_image`; home title 73 → 55 chars; home description/og/twitter said "every U.S. state" → "5 U.S. states so far, with the rest being added" (count from `STATES.length`); `tsconfig.json` (astro strict, `tsc --noEmit` clean); BreadcrumbList on every page but home/404 (`Seo.astro`, `crumb` prop); GA4 snippet in `Layout.astro`, injected only when `PUBLIC_GA_ID` is set; `built-head.test.js`. GA4 measurement ID + CF env var and the GitHub repo rename moved to v4.B (2026-09-25) | ✅ |
 | **v2.A** | plan v2 | resolve the v2 open questions in §6; define v2 build phases | planned |
 | **v3.A** | plan v3 | resolve the v3 open questions in §6; define v3 build phases | planned |
 | **v4.A** | plan v4 | resolve the v4 open questions in §6; define v4 build phases | planned |
+| **v4.B** | conformance leftovers *(from v1.F)* | GA4 measurement ID + `PUBLIC_GA_ID` in Cloudflare (snippet already in `Layout.astro`); GitHub repo rename to the full domain (CHECK_040) | planned |
+| **v4.C** | change data model | `LawChange` dataset under `src/data/changes/` reusing `Fact<>` (instrument, status, effective date, summary, field changes with from → to); stable per-fact anchors on state pages from one `FACT_ANCHORS` map (`#fact-<field>`); drift test: newest effective change per field must match the current `StateLaw` value; test that all 63 baseline sitemap URLs still resolve | planned |
+| **v4.D** | legislative research | history of each state's cottage food law, from its origin to the present, plus pending bills, for CA, FL, NY, OH, TX; primary sources only (bill text, statute, session law, agency notice, register); unsourceable items go in a gap log in `docs/changes-research.md`, not into the data; operator reviews | planned |
+| **v4.E** | change pages + linking | `/changes/` (all states, newest first, filter by state and year, pending bills marked "Not law"); `/changes/<state>/`; "Changes" in the main nav; home "Recent law changes" module; state-page "Recent changes" module with 2–3 entries inline; each entry deep-links to the fact it changed; new pages in the sitemap; no existing URL moves | planned |
+| **v4.F** | feed, JSON, structured data | `/changes/feed.xml` (Atom); `/changes.json` with schema version and license; `Dataset` JSON-LD on `/changes/`, `Legislation` per entry, BreadcrumbList | planned |
+| **v4.G** | link-audit fixes *(optional)* | state pages link to their 7 "can I sell" guides; those guides currently have 1 in-content inbound link each | planned |
 | **v5.A** | plan v5 | resolve the v5 open questions in §6; define v5 build phases | planned |
 | **v5.B** | food-status data | replace text matching with explicit per-category status + source in each `StateLaw` (tracked refactor: matches are loose, e.g. FL "dried goods" is "with limits" because dried meat is prohibited) | planned |
 | **v5.C** | head-tag consolidation | one head component: `Layout.astro` and `Seo.astro` both emit `og:type`; `index.astro` hand-writes its own head (tracked refactor) | planned |
@@ -89,11 +90,11 @@ Two-level versioning convention (canonical: `sites/portfolio/AI_AGENTS.md`):
 - *(append-only log; mark answered with date but never delete)*
 - **v1.D** — Re-verification method: operator verifies each fact, or Claude drafts from the source and the operator approves? — *answered 2026-09-15:* Claude researched each state from official sources, re-fetched and checked every key quote before editing, and the operator reviews the diff.
 - **v1.D** — "Unclear" food statuses (honey in NY/OH/TX, coffee & tea in NY): research and add explicit data, or leave as unclear? — *answered 2026-09-15:* researched. TX allows any food except 6 categories (honey, coffee, tea allowed). OH: only flavored honey from exempt beekeepers ("Yes, with limits"); coffee and dry tea blends allowed. NY: honey is under a separate exemption (stays unclear, with reason); beverages and coffee roasting prohibited. FL: coffee and tea are not on the FDACS list (now unclear).
-- **v1.F** — GA4 measurement ID: operator creates the property (https://analytics.google.com/analytics/web/provision/#/provision/create) and sets `PUBLIC_GA_ID=G-…` for Production in Cloudflare Pages (https://dash.cloudflare.com/?to=/:account/pages/view/cottagefoodmap/settings/environment-variables). The snippet is already in `Layout.astro` and does nothing until the variable is set; after the next deploy, check that `gtag/js?id=` appears on the live page. (open 2026-09-22)
-- **v1.F** — GitHub repo rename `codervijo/cottagefoodmap` → `codervijo/cottagefoodmap.com` (CHECK_040): Claude runs `gh repo rename`, or the operator does it at https://github.com/codervijo/cottagefoodmap/settings? After the rename: `git remote set-url origin git@github.com:codervijo/cottagefoodmap.com.git`, then confirm the Cloudflare Pages Git integration still deploys on push (not yet verified whether a rename breaks it). (open 2026-09-22)
-- **v1.G** — Approve the `LawChange` shape, the separate-dataset-plus-drift-test approach, and the `#fact-<field>` anchor scheme (proposed 2026-09-22).
-- **v1.G** — Scope: the tracker records changes to the law only; this site's own data corrections belong in v4's changelog. Confirm.
-- **v1.J** — License for `/changes.json`: CC BY 4.0, CC BY-NC 4.0, or all rights reserved?
+- **v4.B** *(was v1.F)* — GA4 measurement ID: operator creates the property (https://analytics.google.com/analytics/web/provision/#/provision/create) and sets `PUBLIC_GA_ID=G-…` for Production in Cloudflare Pages (https://dash.cloudflare.com/?to=/:account/pages/view/cottagefoodmap/settings/environment-variables). The snippet is already in `Layout.astro` and does nothing until the variable is set; after the next deploy, check that `gtag/js?id=` appears on the live page. (open 2026-09-22)
+- **v4.B** *(was v1.F)* — GitHub repo rename `codervijo/cottagefoodmap` → `codervijo/cottagefoodmap.com` (CHECK_040): Claude runs `gh repo rename`, or the operator does it at https://github.com/codervijo/cottagefoodmap/settings? After the rename: `git remote set-url origin git@github.com:codervijo/cottagefoodmap.com.git`, then confirm the Cloudflare Pages Git integration still deploys on push (not yet verified whether a rename breaks it). (open 2026-09-22)
+- **v4.C** *(was v1.G)* — Approve the `LawChange` shape, the separate-dataset-plus-drift-test approach, and the `#fact-<field>` anchor scheme (proposed 2026-09-22).
+- **v4.C** *(was v1.G)* — Scope: the tracker records changes to the law only; this site's own data corrections belong in v4's changelog. Confirm.
+- **v4.F** *(was v1.J)* — License for `/changes.json`: CC BY 4.0, CC BY-NC 4.0, or all rights reserved?
 - **v2** — Which 15 states to add, and by what criterion (GSC impressions, keyword demand, population, law clarity)?
 - **v2** — Per-state sourcing workflow: how a new state gets researched, cited, and reviewed.
 - **v2** — Does the 7-category food list or the `StateLaw` schema need to change to fit new states?

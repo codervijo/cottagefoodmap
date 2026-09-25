@@ -36,3 +36,7 @@ to surface "last AI prompt" per project. Keep entries append-only.
 ## 2026-09-22 — v1.F partial, pushed; session paused
 
 > Home description no longer claims "every U.S. state" (count from `STATES.length`). v1.F committed (`fdf1217`) and pushed. Remaining v1.F items are in prd.md §6: the GA4 measurement ID and CF env var, and the GitHub repo rename (CHECK_040). Next after v1.F: v1.G (its open questions are also in §6).
+
+## 2026-09-25 — v1 closed; change tracker moved to v4
+
+> "move rest of v1.f till v1.k into v4 or v5". v1.F marked done with its shipped scope; the GA4 ID + repo rename became v4.B; the change tracker (v1.G–v1.J) became v4.C–v4.F, and the link audit (v1.K) became v4.G. v1 acceptance no longer includes the tracker; v4 acceptance does. Open questions relabeled. Next: v2.A (more states). Earlier the same day: live-site + GSC check of v1.F — 4 of 63 URLs recrawled since the deploy, 2 unknown to Google.
