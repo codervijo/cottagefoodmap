@@ -1,12 +1,12 @@
 # Architecture — cottagefoodmap.com
 
-Status as of v1.E (2026-09-15). Roadmap and phases live in `docs/prd.md`.
+Status as of v2.B (2026-09-25). Roadmap and phases live in `docs/prd.md`.
 
 ## 1. Overview
 
 A fully static Astro site. All content is generated at build time from typed state-law data in
 `src/data/`; there is no server runtime, database, or CMS. Every factual field carries its own
-source URL and verification date, and pages render those citations inline. Output is 64
+source URL and verification date, and pages render those citations inline. Output is 114
 prerendered HTML pages plus `sitemap-index.xml`, served by Cloudflare.
 
 ```
@@ -20,7 +20,7 @@ src/data/phrases.ts ───┘                                            dist
 | Path | Role |
 |---|---|
 | `src/data/schema.ts` | `StateLaw` interface, `Fact<T>` (value + `source_url` + `last_verified`) / `Unverified` union, `isUnverified` guard |
-| `src/data/states/<state>.ts` | One `StateLaw` record per state (CA, FL, NY, OH, TX), 12 facts each, all re-verified 2026-09-15 (v1.D) against official sources listed in `sources` |
+| `src/data/states/<state>.ts` | One `StateLaw` record per state, 12 facts each, checked against official sources listed in `sources`: CA, FL, NY, OH, TX (re-verified 2026-09-15, v1.D); PA, IL, GA, NC, MI (2026-09-25, v2.B) |
 | `src/data/states/index.ts` | `STATES` (sorted by name), `STATES_BY_SLUG`, `getState` |
 | `src/data/foods.ts` | 7 `FoodCategory` entries with substring `match` terms; `foodMatches`, `statusForFood`, `STATUS_ANSWER` |
 | `src/data/format.ts` | Shared display strings: `channelLabel` (Yes / No / No — not authorized / Not addressed), `capLabel` (all tiers), `capAmounts` |
@@ -68,13 +68,13 @@ src/data/phrases.ts ───┘                                            dist
 | Route | Source | Count |
 |---|---|---|
 | `/` | `pages/index.astro` (own head tags, not `Seo.astro`) | 1 |
-| `/states/`, `/states/<state>/` | `pages/states/` | 1 + 5 |
+| `/states/`, `/states/<state>/` | `pages/states/` | 1 + 10 |
 | `/compare/` | `pages/compare.astro` | 1 |
 | `/foods/`, `/foods/<food>/` | `pages/foods/` | 1 + 7 |
 | `/guides/` | `pages/guides/index.astro` | 1 |
-| `/guides/license-cost/<state>/` | title/description include the cost answer | 5 |
-| `/guides/labeling/<state>/` | | 5 |
-| `/guides/sell/<food>/<state>/` | title ends with `STATUS_ANSWER`; description adds permit · fee · cap; lists matched items with sources | 35 |
+| `/guides/license-cost/<state>/` | title/description include the cost answer | 10 |
+| `/guides/labeling/<state>/` | | 10 |
+| `/guides/sell/<food>/<state>/` | title ends with `STATUS_ANSWER`; description adds permit · fee · cap; lists matched items with sources | 70 |
 | `/about/` | | 1 |
 | `404.html` | `pages/404.astro` — noindex, not in sitemap | 1 |
 
@@ -117,6 +117,21 @@ Cloudflare 308s the slashless form. Enforced by `trailing-slash.test.js`.
   has a third value, `not_authorized`. Tiered caps are stored per tier, not as one number plus
   prose, because showing only the top tier made California's cap look wrong.
 
+- **ADR-008 (v2.B) — Record what the official source says, and nothing more.** Four v2.B calls
+  follow from this:
+  - **Georgia training = required.** GDA's current Cottage Food page says operators "must
+    complete an American National Standards Institute (ANSI) accredited food safety training
+    program." HB 398 is silent on training; the note says so rather than overriding the agency.
+  - **North Carolina permit = No, inspection = Yes.** NCDA&CS says "A permit is not issued"; the
+    required pre-sale kitchen inspection is carried by `inspection_required` and the notes, not by
+    reinterpreting "permit".
+  - **Out-of-state online sales: Pennsylvania = Yes, North Carolina = Not addressed.** ADR-007's
+    `not_authorized` is for in-state exemptions. PA and NC are inspected registrations, not
+    exemptions; PDA explicitly addresses out-of-state and internet sales, NC's sources are silent.
+  - **Georgia honey = Unclear.** GDA's FAQ says honey is "not considered cottage foods" and refers
+    producers to its Food Safety Division — regulated elsewhere, not banned. Same treatment as
+    New York honey (separate exemption → Unclear, with reason).
+
 ## 7. Tracked refactors
 
 - **Text-based food matching.** Status still depends on list wording. v1.D narrowed matching to
@@ -133,6 +148,6 @@ Cloudflare 308s the slashless form. Enforced by `trailing-slash.test.js`.
 - **Hard-to-fetch official sources** (relevant to the v4 source watcher): cdph.ca.gov serves an
   incomplete TLS certificate chain (strict clients fail); agriculture.ny.gov returns 403 to
   non-browser clients for PDFs and forms; statutes.capitol.texas.gov is a JavaScript shell (use
-  tcss.legis.texas.gov for text); agri.ohio.gov 404s some non-browser requests.
+  tcss.legis.texas.gov for text); agri.ohio.gov 404s some non-browser requests. Added in v2.B: ilga.gov serves an incomplete TLS chain; rules.sos.ga.gov returns 403 to curl; legis.ga.gov and palegis.us statute pages are JavaScript shells (use the PDF views).
 - **Texas sales cap** is CPI-U adjusted by DSHS annually; no adjusted figure was published on the
   official sources checked 2026-09-15, so the site shows the statutory $150,000.

@@ -44,3 +44,7 @@ to surface "last AI prompt" per project. Keep entries append-only.
 ## 2026-09-25 — v2.A: 15 states picked, v2 split into 3 batches
 
 > "do v2.A - you pick 15 states and plan rest of v2 work", then "split v2 into phases of 5 states each so google has time to digest it". Ahrefs had 0 API units and GSC (90d, 136 queries) had no queries for uncovered states, so states were ranked by Census 2024 population. v2.B PA IL GA NC MI; v2.C NJ VA WA AZ TN; v2.D MA IN MD MO WI; each later batch waits until the previous batch is indexed. v2 open questions answered in §6.
+
+## 2026-09-25 — v2.B: PA, IL, GA, NC, MI
+
+> "commit and start v2.B". One research agent per state, official sources only, quote logs in the session scratchpad. Fees/caps re-checked independently against PA statute, ILCS, MCL, GA HB 398 FAQ, NCDA&CS page. Added an IL dried-goods override (dehydrated tomato/melon prohibited). 114 pages, tsc + 38 tests green. Awaiting operator review before commit.

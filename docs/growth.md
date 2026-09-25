@@ -83,3 +83,12 @@ The high-volume generic head terms ("texas cottage food law") are increasingly a
 - **Action:** Rewrote CA, FL, NY, OH, TX data from official sources (re-fetched and checked). Texas: cap $50,000 → $150,000, any food except 6 categories, new label disclosure, wholesale to vendors. CA: 2026 caps. FL: coffee/tea not on the FDACS list → "Unclear". NY/OH/TX: dead agency URLs replaced. Ohio honey → "Yes, with limits".
 - **Result:** TBD — review 2026-10-13
 - **Learning:** TBD
+
+## 2026-09-25 — v2.B: 5 more states (PA, IL, GA, NC, MI), +50 pages
+- **Status:** active
+- **Hypothesis:** The same per-state template that already gets page-1 impressions for CA/TX guides will earn impressions for the 5 most populous uncovered states. Shipping 5 at a time (not 15) lets Google index each batch before the next.
+- **KPI:** indexed count of the 50 new URLs (`lamill settings gsc recrawl`); site impressions and clicks; impressions on `/guides/*/{pennsylvania,illinois,georgia,north-carolina,michigan}/`.
+- **Baseline (GSC 28d, 2026-08-26 → 2026-09-22):** site 1,090 imp · 9 clicks · 0.8% CTR · avg pos 24.0. New-state URLs: 0 (not yet published). Indexed: 61 of 63 sitemap URLs.
+- **Action:** 5 state records researched from official sources (59 of 60 facts verified); 114 pages built. v2.C starts only after these pages are indexed.
+- **Result:** TBD — review 2026-10-23
+- **Learning:** TBD
