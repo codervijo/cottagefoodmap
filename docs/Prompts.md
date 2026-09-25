@@ -40,3 +40,7 @@ to surface "last AI prompt" per project. Keep entries append-only.
 ## 2026-09-25 — v1 closed; change tracker moved to v4
 
 > "move rest of v1.f till v1.k into v4 or v5". v1.F marked done with its shipped scope; the GA4 ID + repo rename became v4.B; the change tracker (v1.G–v1.J) became v4.C–v4.F, and the link audit (v1.K) became v4.G. v1 acceptance no longer includes the tracker; v4 acceptance does. Open questions relabeled. Next: v2.A (more states). Earlier the same day: live-site + GSC check of v1.F — 4 of 63 URLs recrawled since the deploy, 2 unknown to Google.
+
+## 2026-09-25 — v2.A: 15 states picked, v2 split into 3 batches
+
+> "do v2.A - you pick 15 states and plan rest of v2 work", then "split v2 into phases of 5 states each so google has time to digest it". Ahrefs had 0 API units and GSC (90d, 136 queries) had no queries for uncovered states, so states were ranked by Census 2024 population. v2.B PA IL GA NC MI; v2.C NJ VA WA AZ TN; v2.D MA IN MD MO WI; each later batch waits until the previous batch is indexed. v2 open questions answered in §6.
