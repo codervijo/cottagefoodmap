@@ -48,3 +48,12 @@ to surface "last AI prompt" per project. Keep entries append-only.
 ## 2026-09-25 — v2.B: PA, IL, GA, NC, MI
 
 > "commit and start v2.B". One research agent per state, official sources only, quote logs in the session scratchpad. Fees/caps re-checked independently against PA statute, ILCS, MCL, GA HB 398 FAQ, NCDA&CS page. Added an IL dried-goods override (dehydrated tomato/melon prohibited). 114 pages, tsc + 38 tests green. Awaiting operator review before commit.
+
+## 2026-09-25 — v2.B pushed; session handoff
+
+> v2.B committed (`484f98a`) and pushed; ADR-008 records the four v2.B judgment calls (GA training, NC permit, PA/NC out-of-state, GA honey → Unclear). Deploy was not yet live at the last check. Next session:
+> 1. Confirm the deploy: `/states/michigan/` returns 200 and the home page says "10 U.S. states".
+> 2. Request indexing in GSC for `/states/california/`, `/states/florida/`, `/guides/license-cost/florida/`, `/guides/sell/jams-and-jellies/ohio/`, plus the 5 new state pages.
+> 3. v2.C is gated: start only after `lamill settings gsc recrawl --site cottagefoodmap.com --since 2026-09-25T20:00Z` shows v2.B's 50 URLs indexed (the command inspects at most 50 URLs per run; pass `--urls` for the rest).
+> 4. After 2026-10-01, recheck Michigan's caps: MDARD may publish CPI-adjusted figures.
+> 5. Growth reviews due 2026-10-13 (titles, v1.D) and 2026-10-23 (v2.B).
