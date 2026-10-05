@@ -126,8 +126,11 @@ export const pennsylvania: StateLaw = {
     last_verified: VERIFIED,
   },
   training_required: {
-    unverified: true,
-    note: "PDA's Limited Food Establishment page and application packet name no training course or certificate; the packet says operators \"must demonstrate basic food safety knowledge.\" Not confirmed whether a certified food employee rule applies when a Retail Food License is also needed.",
+    value: false,
+    source_url: "https://www.palegis.us/statutes/consolidated/view-statute?txtType=PDF&ttl=3&div=00.&chpt=65",
+    source_title: "3 Pa.C.S. Ch. 65 (Food Employee Certification Act), § 6510",
+    last_verified: "2026-10-05",
+    notes: "No course or certificate is required. The Food Employee Certification Act says \"Food establishments are exempt from this chapter\" (§ 6510(c)), and a Limited Food Establishment registers as a food establishment. PDA's application packet says operators \"must demonstrate basic food safety knowledge\" but names no course or exam. A farmers market stand that needs a Retail Food License is a retail food facility, which normally needs a certified food employee (§ 6504(a)), but facilities that \"handle only nonpotentially hazardous food are exempt\" (§ 6510(b)(1)). Limited Food Establishments may only make non-TCS foods, so a stand selling only those products is exempt. A stand that also sells TCS (potentially hazardous) food needs a certified employee.",
   },
   inspection_required: {
     value: true,
@@ -148,6 +151,7 @@ export const pennsylvania: StateLaw = {
     { title: PA_FARMERS_MARKET_TITLE, url: PA_FARMERS_MARKET, type: "guidance" },
     { title: "PDA Guidelines for Honey Processors in PA (Rev 02/2023)", url: PA_HONEY, type: "guidance" },
     { title: "3 Pa.C.S. Ch. 57 (Food Safety Act, §§ 5721–5737)", url: PA_STATUTE, type: "statute" },
+    { title: "3 Pa.C.S. Ch. 65 (Food Employee Certification Act)", url: "https://www.palegis.us/statutes/consolidated/view-statute?txtType=PDF&ttl=3&div=00.&chpt=65", type: "statute" },
   ],
   last_reviewed: VERIFIED,
 };

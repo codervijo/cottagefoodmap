@@ -57,3 +57,11 @@ to surface "last AI prompt" per project. Keep entries append-only.
 > 3. v2.C is gated: start only after `lamill settings gsc recrawl --site cottagefoodmap.com --since 2026-09-25T20:00Z` shows v2.B's 50 URLs indexed (the command inspects at most 50 URLs per run; pass `--urls` for the rest).
 > 4. After 2026-10-01, recheck Michigan's caps: MDARD may publish CPI-adjusted figures.
 > 5. Growth reviews due 2026-10-13 (titles, v1.D) and 2026-10-23 (v2.B).
+
+## 2026-10-05 — v2.C: NJ, VA, WA, AZ, TN
+
+> "push and start on next set of states". Pushed the v2.B handoff (`93f8827`). Gate check: 45 of v2.B's 50 URLs crawled and PASS; the 5 honey guides are unknown to Google (request indexing manually). One research agent per state, official sources only, quote logs in the session scratchpad; fees/caps re-fetched independently (NJ FAQ, WSDA page, RCW 69.22, A.R.S. § 36-932, Va. Code § 3.2-5130). ADR-009 records five calls (AZ/TN farmers market, WA online in-state, NJ out-of-state and pickles, VA caps and honey). `lamill settings gsc status --refresh` crashes on a 403 for an unrelated property (virtually.co.in); baseline pulled from the GSC API directly. 164 pages, tsc + 38 tests green. Awaiting operator review before commit.
+
+## 2026-10-05 — fill missing fields
+
+> "help me fill in any missing fields". Scaffold placeholders filled in `AI_AGENTS.md` (Goals from PRD §3, truncated ICP, duplicate Content strategy, out-of-scope, post-deploy checklist: GSC verified, sitemap submitted 2026-06-19), `docs/CLAUDE.md` (Project, Deferred decisions from PRD non-goals), `README.md`. `AI_AGENTS.md` versioning no longer allows `vN.X.Y` (matches `portfolio/AI_AGENTS.md`). Last unverified data field resolved: Pennsylvania training = No (3 Pa.C.S. § 6510(c), "Food establishments are exempt from this chapter"; farmers-market stands selling only non-TCS foods exempt under § 6510(b)(1)). 0 Unverified facts remain across 15 states.

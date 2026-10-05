@@ -2,27 +2,19 @@
 
 ## Summary
 
-*one paragraph: what this site is, what it does*
-
 cottagefoodmap.com turns the messy, scattered world of US cottage food law into a clean, queryable per-state matrix. Most people who want to sell baked goods or jams from their home kitchen hit the same wall: the rules differ in every state, official .gov pages are dense and incomplete, and a Google search returns a generic AI summary that doesn't answer "can I actually sell this, and what will it cost me." The site answers the specific questions people actually search — license cost, permit requirements, allowed and prohibited foods, labeling requirements, and sales channels — for each state, each field sourced to a primary authority and dated so it stays trustworthy as laws change. The defensible asset isn't the prose; it's the maintained, cited, structured data that a generic answer engine can't reproduce inline.
 
 ## Audience
-
-*one sentence: who this is for (broad demographic)*
 
 Aspiring and active home-based food sellers in the US — people turning home baking, canning, or cooking into a small side income who need to know the rules for their specific state.
 
 ## ICP
 
-*the specific ideal customer — demographics, pain points, what they use today. More detail than Audience: Audience is the broad demo ("homeowners with EV chargers"), ICP is the specific targetable subset ("Tesla owners in CA who installed in last 90d, paid $2k+")*
-
-The core user is a US-based individual, disproportionately women running or planning a home food microbusiness (baked goods, jams, cottage-canned goods, candy), who has a real product but no legal background and a low budget. They're motivated by a concrete trigger — wanting to sell at a farmers market, take Instagram orders, or scale a hobby — and anxious about doing it legally without hiring a lawyer or wading through statute. They search highly specific questions ("cottage food license cost in Texas," "can I sell from home in Ohio," "California cottage food labeling requirements") and want a fast, trustworthy, plain-English answer for their state, ideally with a link to the offi
+The core user is a US-based individual, disproportionately women running or planning a home food microbusiness (baked goods, jams, cottage-canned goods, candy), who has a real product but no legal background and a low budget. They're motivated by a concrete trigger — wanting to sell at a farmers market, take Instagram orders, or scale a hobby — and anxious about doing it legally without hiring a lawyer or wading through statute. They search highly specific questions ("cottage food license cost in Texas," "can I sell from home in Ohio," "California cottage food labeling requirements") and want a fast, trustworthy, plain-English answer for their state, ideally with a link to the official source.
 
 ## Goals
 
-*1-2 sentences: primary business / product goal*
-
-5. Goals
+Be the most trusted per-state reference for US cottage food rules — every fact cited to a primary source and dated, or marked `Unverified` — and capture the long tail of specific per-state queries (cost, permit, per-food allowance, labeling, where to sell). Coverage grows 5 → 20 → 50 states (v1–v3), then freshness (v4) and fact-correctness checks (v5); the site counts toward the sites/* goal of 30 commercial sites with SEO traffic. Source: `docs/prd.md` §3.
 
 ## Tech stack
 
@@ -88,28 +80,22 @@ docker exec -w /usr/src/app <name> make test proj=cottagefoodmap.com
   (avoids the bun-detection trap kwizicle.com hit). Idempotent; safe to re-run.
 - **Vite version:** must be ≥ 6.0.0 — Wrangler's Vite integration rejects Vite 5.
 - **Env vars:** set `VITE_*` vars (e.g. `VITE_GA_ID`) in the Cloudflare Workers project's environment-variable settings — they're inlined at build time.
-- **Live URL:** https://cottagefoodmap.com/  *(update once first deploy succeeds)*
+- **Live URL:** https://cottagefoodmap.com/
 - **Legacy:** if a `vercel.json` or `.vercelignore` is present from a Lovable export, it's inert on Cloudflare and safe to delete.
 
 ## Content strategy
 
-*what content this site needs — page types, initial topics, format mix (long-form vs reference vs tool)*
-
 Become the most trusted, most complete per-state reference for US cottage food rules, ranking for the specific cost/permit/allowed-food/labeling queries that survive AI Overviews. Convert that organic traffic into a durable audience via email and, later, monetization through relevant lead-gen, affiliate (insurance, labeling/packaging, food-handler courses), or a low-cost compliance toolkit.
 
-6. Content strategy
 Lead with the validated sub-template pages, not the AI-Overview-eaten generic "[state] cottage food law" head term: build per-state pages for license cost, permit requirements, allowed/prohibited foods, labeling requirements, and sales channels, each prerendered as static HTML with cited primary sources, a last-verified date, and schema.org markup. Cross-link the matrix densely (state-to-state, topic-to-topic) and add a comparison view that no generic answer can replicate. Every page's edge is specificity plus sourcing plus freshness — the three things a one-line AI summary structurally can't deliver — and accuracy is treated as non-negotiable, with unverified fields shown as gaps rather than guessed.
 
-9. Growth hypothesis
-The high-volume generic head terms ("texas cottage food law") are increasingly answered inline by AI Overviews and dominated by .gov and nonprofits, but the long tail of specific, intent-rich sub-queries — cost, permit, per-product allowance, labeling, where-can-I-sell, across 50 states — is large, demand-confirmed in keyword data, weakly served by thin blogs and PDFs, and harder for an answer engine to fully satisfy. A dense, primary-sourced, freshness-maintained per-state matrix can capture that long tail within 6–12 months, compound as the data deepens, and defend its position precisely because the moat is maintained structured data rather than reproducible prose.
-6. Content strategy
-Lead with the validated sub-template pages, not the AI-Overview-eaten generic "[state] cottage food law" head term: build per-state pages for license cost, permit requirements, allowed/prohibited foods, labeling requirements, and sales channels, each prerendered as static HTML with cited primary sources, a last-verified date, and schema.org markup. Cross-link the matrix densely (state-to-state, topic-to-topic) and add a comparison view that no generic answer can replicate. Every page's edge is specificity plus sourcing plus freshness — the three things a one-line AI summary structurally can't deliver — and accuracy is treated as non-negotiable, with unverified fields shown as gaps rather than guessed.
+**Growth hypothesis.** The high-volume generic head terms ("texas cottage food law") are increasingly answered inline by AI Overviews and dominated by .gov and nonprofits, but the long tail of specific, intent-rich sub-queries — cost, permit, per-product allowance, labeling, where-can-I-sell, across 50 states — is large, demand-confirmed in keyword data, weakly served by thin blogs and PDFs, and harder for an answer engine to fully satisfy. A dense, primary-sourced, freshness-maintained per-state matrix can capture that long tail within 6–12 months, compound as the data deepens, and defend its position precisely because the moat is maintained structured data rather than reproducible prose.
 
-### Post-deploy checklist (do these once after the first successful deploy)
+### Post-deploy checklist
 
-- [ ] Verify in **Google Search Console** at https://search.google.com/search-console — add as `sc-domain:cottagefoodmap.com` property; verify via DNS TXT record. Until this is done, no SEO traffic data is observable for this site (and the workspace-wide `30 commercial sites with traffic` goal can't credit it).
-- [ ] Submit the sitemap (`https://cottagefoodmap.com/sitemap.xml`) inside GSC.
-- [ ] Update the **Live URL** above with the actual deploy URL.
+- [x] Verify in **Google Search Console** at https://search.google.com/search-console — add as `sc-domain:cottagefoodmap.com` property; verify via DNS TXT record. Until this is done, no SEO traffic data is observable for this site (and the workspace-wide `30 commercial sites with traffic` goal can't credit it).
+- [x] Submit the sitemap (`https://cottagefoodmap.com/sitemap-index.xml`) inside GSC — submitted 2026-06-19.
+- [x] Update the **Live URL** above with the actual deploy URL.
 - [ ] Run `make run ARGS="cleanup"` from `sites/portfolio/` so `data/portfolio.json` reflects the new project's state (and `project status cottagefoodmap.com` resolves cleanly).
 
 ## How to run
@@ -174,8 +160,9 @@ in `sites/portfolio/AI_AGENTS.md`):
 - **`vN.X`** — phase letter within a tier (A / B / C / …). Internal slicing of
   build work; signals "order/scope can shift." Each phase still ships
   independently.
-- **`vN.X.Y`** — numeric sub-phase for follow-up work that lands AFTER `vN.X`
-  shipped (e.g. polish, bug fixes, scope cuts).
+- **`vN.A`** — always the planning / decisions-lock phase; build work starts at `.B`.
+- **Two levels only — never `vN.X.Y`.** Follow-up work inside a tier gets the next
+  phase letter; renumber later phases to make room.
 
 Two-layer notation separates **external version** (what consumers see) from
 **internal phasing** (how the team slices work). Letters signal *un-promised* —
@@ -184,7 +171,7 @@ nobody mistakes `v1.B` for a SemVer minor release.
 **Always use this numbering when planning or shipping work on this project.**
 Specifically:
 
-- Every entry in `docs/prd.md`'s phases table uses `vN.X` (or `vN.X.Y`).
+- Every entry in `docs/prd.md`'s phases table uses `vN.X`.
 - Every commit message that ships a phase mentions its version (e.g.
   `v1.B — auth flow`).
 - Every entry in `docs/Prompts.md` references the version of the work it
@@ -194,7 +181,7 @@ Don't introduce a parallel scheme (no `0.1.0` / `Sprint 3` / etc.). When in
 doubt, the canonical statement is `sites/portfolio/AI_AGENTS.md`.
 
 Track this project's progress in `docs/prd.md` against this taxonomy. v0.A is
-the bootstrap (this scaffold); v1.A is the first real shipped capability.
+the bootstrap (this scaffold); v1.A planned v1 and build work started at v1.B.
 
 ## Answering style
 
@@ -213,4 +200,5 @@ planning artifacts (PRD, ADR, phase proposals) or on request.
 
 ## Out of scope / don't touch
 
-- *(leave blank — fill in when something is)*
+- `genai/` — the original Lovable/TanStack Start export; reference only, not built.
+- Monetization (email capture, affiliate, lead-gen, paid toolkit) — not on the v1–v5 roadmap.
