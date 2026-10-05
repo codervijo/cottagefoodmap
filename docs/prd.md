@@ -1,10 +1,10 @@
 ---
 project: cottagefoodmap.com
 prd_version: 2
-project_version: v2.A
+project_version: v2.C
 status: active
 owner: Vijo
-last_updated: 2026-09-25
+last_updated: 2026-10-05
 ---
 
 # cottagefoodmap.com — PRD
@@ -74,7 +74,7 @@ Two-level versioning convention (canonical: `sites/portfolio/AI_AGENTS.md`):
 | **v1.F** | conformance + SEO gaps | `og:image`; analytics (no data on CTR changes without it); home `<title>` under 60 chars; `tsconfig.json`; BreadcrumbList schema. Done 2026-09-22: site-wide `og:image` (`public/og.png`, 1200×630) + `summary_large_image`; home title 73 → 55 chars; home description/og/twitter said "every U.S. state" → "5 U.S. states so far, with the rest being added" (count from `STATES.length`); `tsconfig.json` (astro strict, `tsc --noEmit` clean); BreadcrumbList on every page but home/404 (`Seo.astro`, `crumb` prop); GA4 snippet in `Layout.astro`, injected only when `PUBLIC_GA_ID` is set; `built-head.test.js`. GA4 measurement ID + CF env var and the GitHub repo rename moved to v4.B (2026-09-25) | ✅ |
 | **v2.A** | plan v2 | 15 states picked by population (Census 2024 estimates, `NST-EST2024-ALLDATA.csv`), because keyword data was unavailable (Ahrefs out of units; GSC 90d shows no queries for uncovered states); sourcing workflow and schema policy in §6; build split into 3 batches of 5 so Google indexes each batch before the next arrives | ✅ |
 | **v2.B** | states batch 1 | Pennsylvania, Illinois, Georgia, North Carolina, Michigan at the v1 data standard; +50 pages (10 per state); growth.md entry with baseline. Researched 2026-09-25: 59 of 60 facts verified (PA training `Unverified`); fees PA $35/yr, IL varies (≤ $50), GA/NC/MI none; caps MI tiered $50,000 / $75,000, others none. GA: HB 398 (eff. 2025-07-01) removed the license and fee; GDA rules not yet amended. MI: 2025 PA 51 caps, CPI-adjustable from 2026-10-01. PA and NC are inspected registrations, not exemptions. GA honey → Unclear; calls recorded as ADR-008. 114 pages built, tsc + 38 tests green | ✅ |
-| **v2.C** | states batch 2 | New Jersey, Virginia, Washington, Arizona, Tennessee; starts only after v2.B's pages show as indexed (`lamill settings gsc recrawl`) | planned |
+| **v2.C** | states batch 2 | New Jersey, Virginia, Washington, Arizona, Tennessee at the v1 data standard; +50 pages (10 per state); growth.md entry with baseline. Gate check 2026-10-05: 45 of v2.B's 50 URLs crawled and PASS; the 5 `/guides/sell/honey/<state>/` pages are unknown to Google; started on operator go. Researched 2026-10-05: 60 of 60 facts verified; fees NJ $100 / 2 yr, WA $355 / 2 yr, VA/AZ/TN none; caps NJ $50,000, WA $35,000, VA none ($9,000 for pickles and acidified vegetables), AZ/TN none. VA: HB 402 (2026 Acts ch. 605, eff. 2026-07-01) allows sales at any location, online, and by mail within Virginia. TN: Food Freedom Act (2022 PC 862, 2025 PC 431 adds TCS foods); AZ: 2024 HB 2042 TCS expansion; both allow all foods except a short list. Pending, not law: NJ A5229 ($100,000 cap), S4648 ($150,000, in-state mailing, retail); WA HB 2703 (extracts). Calls recorded as ADR-009. 164 pages built, tsc + 38 tests green | ✅ |
 | **v2.D** | states batch 3 | Massachusetts, Indiana, Maryland, Missouri, Wisconsin; starts only after v2.C's pages show as indexed | planned |
 | **v3.A** | plan v3 | resolve the v3 open questions in §6; define v3 build phases | planned |
 | **v4.A** | plan v4 | resolve the v4 open questions in §6; define v4 build phases | planned |

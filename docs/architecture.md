@@ -1,12 +1,12 @@
 # Architecture — cottagefoodmap.com
 
-Status as of v2.B (2026-09-25). Roadmap and phases live in `docs/prd.md`.
+Status as of v2.C (2026-10-05). Roadmap and phases live in `docs/prd.md`.
 
 ## 1. Overview
 
 A fully static Astro site. All content is generated at build time from typed state-law data in
 `src/data/`; there is no server runtime, database, or CMS. Every factual field carries its own
-source URL and verification date, and pages render those citations inline. Output is 114
+source URL and verification date, and pages render those citations inline. Output is 164
 prerendered HTML pages plus `sitemap-index.xml`, served by Cloudflare.
 
 ```
@@ -20,7 +20,7 @@ src/data/phrases.ts ───┘                                            dist
 | Path | Role |
 |---|---|
 | `src/data/schema.ts` | `StateLaw` interface, `Fact<T>` (value + `source_url` + `last_verified`) / `Unverified` union, `isUnverified` guard |
-| `src/data/states/<state>.ts` | One `StateLaw` record per state, 12 facts each, checked against official sources listed in `sources`: CA, FL, NY, OH, TX (re-verified 2026-09-15, v1.D); PA, IL, GA, NC, MI (2026-09-25, v2.B) |
+| `src/data/states/<state>.ts` | One `StateLaw` record per state, 12 facts each, checked against official sources listed in `sources`: CA, FL, NY, OH, TX (re-verified 2026-09-15, v1.D); PA, IL, GA, NC, MI (2026-09-25, v2.B); NJ, VA, WA, AZ, TN (2026-10-05, v2.C) |
 | `src/data/states/index.ts` | `STATES` (sorted by name), `STATES_BY_SLUG`, `getState` |
 | `src/data/foods.ts` | 7 `FoodCategory` entries with substring `match` terms; `foodMatches`, `statusForFood`, `STATUS_ANSWER` |
 | `src/data/format.ts` | Shared display strings: `channelLabel` (Yes / No / No — not authorized / Not addressed), `capLabel` (all tiers), `capAmounts` |
@@ -68,13 +68,13 @@ src/data/phrases.ts ───┘                                            dist
 | Route | Source | Count |
 |---|---|---|
 | `/` | `pages/index.astro` (own head tags, not `Seo.astro`) | 1 |
-| `/states/`, `/states/<state>/` | `pages/states/` | 1 + 10 |
+| `/states/`, `/states/<state>/` | `pages/states/` | 1 + 15 |
 | `/compare/` | `pages/compare.astro` | 1 |
 | `/foods/`, `/foods/<food>/` | `pages/foods/` | 1 + 7 |
 | `/guides/` | `pages/guides/index.astro` | 1 |
-| `/guides/license-cost/<state>/` | title/description include the cost answer | 10 |
-| `/guides/labeling/<state>/` | | 10 |
-| `/guides/sell/<food>/<state>/` | title ends with `STATUS_ANSWER`; description adds permit · fee · cap; lists matched items with sources | 70 |
+| `/guides/license-cost/<state>/` | title/description include the cost answer | 15 |
+| `/guides/labeling/<state>/` | | 15 |
+| `/guides/sell/<food>/<state>/` | title ends with `STATUS_ANSWER`; description adds permit · fee · cap; lists matched items with sources | 105 |
 | `/about/` | | 1 |
 | `404.html` | `pages/404.astro` — noindex, not in sitemap | 1 |
 
@@ -132,6 +132,25 @@ Cloudflare 308s the slashless form. Enforced by `trailing-slash.test.js`.
     producers to its Food Safety Division — regulated elsewhere, not banned. Same treatment as
     New York honey (separate exemption → Unclear, with reason).
 
+- **ADR-009 (v2.C) — Same rule (ADR-006/008) applied to v2.C.** Five calls:
+  - **Farmers market: Arizona = Yes, Tennessee = Not addressed.** Neither names farmers markets.
+    Arizona's statute and rule do address selling away from home ("when operating as a temporary
+    food establishment", "a location other than from the home kitchen"); Tennessee's law sets no
+    location rule for in-person sales and never addresses markets.
+  - **Washington online in-state = Yes.** RCW 69.22.020(4): products "may not be sold by internet,
+    mail order, or for retail sale outside the state". WAC 16-149-040, the WSDA FAQ, and form
+    AGR-2093 allow internet orders picked up or delivered in person within Washington. The
+    agency reading is followed and the notes quote both.
+  - **New Jersey out-of-state = No, not `not_authorized`.** N.J.A.C. 8:24-11.3(a)6 bans interstate
+    delivery explicitly; an explicit ban is "No". `not_authorized` stays for silent exemptions.
+  - **New Jersey pickles = No (override).** NJDOH's approved list has no pickled, acidified, or
+    fermented category, and its prohibited-ingredient list bars vegetables; matching alone gave
+    Unclear.
+  - **Virginia caps live in notes, not tiers.** The exemption has no cap for low-risk foods; only
+    pickles/acidified vegetables ($9,000/yr) and honey (< 250 gal/yr) are capped. A single
+    `SalesCapTier` would read as the overall cap. Virginia honey = "with limits", not Unclear:
+    unlike Georgia and New York, its honey exemption is in the same § 3.2-5130.
+
 ## 7. Tracked refactors
 
 - **Text-based food matching.** Status still depends on list wording. v1.D narrowed matching to
@@ -148,6 +167,6 @@ Cloudflare 308s the slashless form. Enforced by `trailing-slash.test.js`.
 - **Hard-to-fetch official sources** (relevant to the v4 source watcher): cdph.ca.gov serves an
   incomplete TLS certificate chain (strict clients fail); agriculture.ny.gov returns 403 to
   non-browser clients for PDFs and forms; statutes.capitol.texas.gov is a JavaScript shell (use
-  tcss.legis.texas.gov for text); agri.ohio.gov 404s some non-browser requests. Added in v2.B: ilga.gov serves an incomplete TLS chain; rules.sos.ga.gov returns 403 to curl; legis.ga.gov and palegis.us statute pages are JavaScript shells (use the PDF views).
+  tcss.legis.texas.gov for text); agri.ohio.gov 404s some non-browser requests. Added in v2.B: ilga.gov serves an incomplete TLS chain; rules.sos.ga.gov returns 403 to curl; legis.ga.gov and palegis.us statute pages are JavaScript shells (use the PDF views). Added in v2.C: apps.azsos.gov (A.A.C. PDFs) returns a Cloudflare 403 challenge; azdhs.gov loads page sections by POST (JS shell); lis.virginia.gov bill pages are JS shells (LIS public API works) and legacylis.virginia.gov was intermittently down; Tennessee's consolidated code is on Lexis (JS shell; cite session laws); publications.tnsosfiles.com 403s plain curl; old WSDA cottage-food URLs 404 (live: agr.wa.gov/cottagefood).
 - **Texas sales cap** is CPI-U adjusted by DSHS annually; no adjusted figure was published on the
   official sources checked 2026-09-15, so the site shows the statutory $150,000.

@@ -92,3 +92,12 @@ The high-volume generic head terms ("texas cottage food law") are increasingly a
 - **Action:** 5 state records researched from official sources (59 of 60 facts verified); 114 pages built. v2.C starts only after these pages are indexed.
 - **Result:** TBD — review 2026-10-23
 - **Learning:** TBD
+
+## 2026-10-05 — v2.C: 5 more states (NJ, VA, WA, AZ, TN), +50 pages
+- **Status:** active
+- **Hypothesis:** Batch 2 earns impressions the way batch 1 did. v2.B pages picked up impressions within ~10 days of shipping, so the per-state template generalizes beyond the original 5 states.
+- **KPI:** indexed count of the 50 new URLs (`lamill settings gsc recrawl`); site impressions and clicks; impressions on `/guides/*/{new-jersey,virginia,washington,arizona,tennessee}/`.
+- **Baseline (GSC 28d, 2026-09-05 → 2026-10-02):** site 1,776 imp · 18 clicks · 1.0% CTR · avg pos 18.6. v2.B URLs: 31 with impressions, 168 imp · 1 click. v2.C URLs: 0 (not yet published). v2.B gate: 45 of 50 URLs crawled; 5 `/guides/sell/honey/<state>/` pages unknown to Google.
+- **Action:** 5 state records researched from official sources (60 of 60 facts verified); 164 pages built. v2.D starts only after these pages are indexed.
+- **Result:** TBD — review 2026-11-02
+- **Learning:** TBD
