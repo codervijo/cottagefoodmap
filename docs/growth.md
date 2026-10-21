@@ -57,32 +57,32 @@ https://search.google.com/search-console directly.
 ---
 
 ## 2026-06-09 — 9.
-- **Status:** active
+- **Status:** shipped
 - **Hypothesis:** 9. Growth hypothesis
 The high-volume generic head terms ("texas cottage food law") are increasingly answered inline by AI Overviews and dominated by .gov and nonprofits, but the long tail of specific, intent-rich sub-queries — cost, permit, per-product allowance, labeling, where-can-I-sell, across 50 states — is large, demand-confirmed in keyword data, weakly served by thin blogs and PDFs, and harder for an answer engine to fully satisfy. A dense, primary-sourced, freshness-maintained per-state matrix can capture that long tail within 6–12 months, compound as the data deepens, and defend its position precisely because the moat is maintained structured data rather than reproducible prose.
 - **KPI:** any GSC traffic — clicks, impressions, indexed-page count
 - **Baseline:** 0 clicks / 0 impressions (just deployed)
 - **Action:** project scaffolded via `portfolio new bootstrap`; first deploy pending. After deploy: verify in GSC as `sc-domain:cottagefoodmap.com` and submit the sitemap.
-- **Result:** TBD — review 2026-07-07
-- **Learning:** TBD
+- **Result:** (GSC 28d, 2026-09-21 → 2026-10-18; reviewed 2026-10-21) site 2,558 imp · 28 clicks · 1.1% CTR · avg pos 12.9. "Can I sell" guides carry most of it: 1,678 imp · 26 clicks across 120 URLs.
+- **Learning:** The long-tail bet is producing: per-food, per-state questions earn the impressions and nearly all clicks, while state pages (666 imp, 3 clicks) and head terms don't. Keep deepening the guides (v2.D) and widening state coverage.
 
 ## 2026-09-15 — Trailing-slash canonicals + answer-first guide titles
-- **Status:** active
+- **Status:** shipped
 - **Hypothesis:** Guide pages already rank on page 1 but don't get clicks because the title only repeats the question. Putting the answer (plus permit/fee/cap) in the title and description lifts CTR. Separately, pointing canonicals and internal links at the final `/path/` URL merges the duplicate slash/no-slash URLs GSC reports, and gets `/foods/` indexed.
 - **KPI:** site CTR; CTR on `/guides/sell/coffee-and-tea/{california,texas}/`; `/foods` coverage in GSC; no more duplicate `/states/<x>` vs `/states/<x>/` rows in the GSC page report.
 - **Baseline (GSC 28d to 2026-09-12):** site 630 imp · 3 clicks · 0.5% CTR · avg pos 28.8. `coffee-and-tea/california/` 172 imp · 1 click · pos 8.7. `coffee-and-tea/texas/` 82 imp · 0 clicks · pos 9.9. `/foods` = "Page with redirect" (not indexed). `project check`: CHECK_161 — 48 canonicals 308.
 - **Action:** `trailingSlash: 'always'`; canonicals and all internal links now end in `/`. "Can I sell X" titles end with Yes / Yes, with limits / No / Unclear, and descriptions add permit · fee · sales cap from the state data. License-cost titles include the cost. Also fixed the matcher: a food named on both lists was marked "prohibited", so CA/FL/NY/OH baked goods and OH coffee showed "No". It's now "restricted" ("Yes, with limits"), and the page lists the matched items with their sources.
-- **Result:** TBD — review 2026-10-13
-- **Learning:** TBD
+- **Result:** (GSC 28d, 2026-09-21 → 2026-10-18; reviewed 2026-10-21) site CTR 0.5% → 1.1% (630 → 2,558 imp; 3 → 28 clicks; avg pos 28.8 → 12.9). `coffee-and-tea/california/` 172 imp · 1 click · pos 8.7 → 192 imp · 4 clicks · 2.1% CTR · pos 7.8. `coffee-and-tea/texas/` 82 imp · 0 clicks · pos 9.9 → 211 imp · 0 clicks · pos 8.1. `/foods/` now "Submitted and indexed" (last crawl 2026-10-10). Slashless URLs still appear: 28 page rows without the trailing slash had impressions in the window (largest: `/guides/sell/coffee-and-tea/florida` 61 imp).
+- **Learning:** CTR doubled, but v1.D and the v2.B states shipped in the same window, so the title change can't be isolated. The Texas coffee guide went from 82 to 211 imp at ~pos 8 with no clicks; its "No"/"Unclear"-type answers may be satisfied in the snippet. Slash duplicates are fading, not gone; recheck the slashless rows at the next review.
 
 ## 2026-09-15 — v1.D: all 5 states re-verified against official sources
-- **Status:** active
+- **Status:** testing
 - **Hypothesis:** Correct, current, sourced answers are the site's only defensible edge. Fixing stale facts (Texas SB 541, California 2026 caps) and dead source links protects trust and should lift engagement on affected guide pages over time; wrong answers were a credibility risk regardless of traffic.
 - **KPI:** GSC clicks and CTR on `/guides/sell/*/texas/` and `/states/texas/`; no regressions in indexed pages.
 - **Baseline (GSC 28d to 2026-09-12):** site 630 imp · 3 clicks. `coffee-and-tea/texas/` 82 imp · 0 clicks · pos 9.9. `states/texas` 13 + 10 imp (slash/no-slash split).
 - **Action:** Rewrote CA, FL, NY, OH, TX data from official sources (re-fetched and checked). Texas: cap $50,000 → $150,000, any food except 6 categories, new label disclosure, wholesale to vendors. CA: 2026 caps. FL: coffee/tea not on the FDACS list → "Unclear". NY/OH/TX: dead agency URLs replaced. Ohio honey → "Yes, with limits".
-- **Result:** TBD — review 2026-10-13
-- **Learning:** TBD
+- **Result:** (GSC 28d, 2026-09-21 → 2026-10-18; reviewed 2026-10-21) `/guides/sell/*/texas/` 10 URLs · 317 imp · 1 click · pos 7.9. `coffee-and-tea/texas/` 211 imp · 0 clicks · pos 8.1. `/states/texas/` 61 imp · 1 click · pos 20.8 (baseline 13 + 10 imp split across slash forms; now one URL). Indexed-page regressions not checked across the full sitemap. Extended — review 2026-11-10.
+- **Learning:** Impressions on Texas pages grew about 3×, but clicks stayed at 1–2, too few to say whether corrected facts changed engagement. Extend one window.
 
 ## 2026-09-25 — v2.B: 5 more states (PA, IL, GA, NC, MI), +50 pages
 - **Status:** active

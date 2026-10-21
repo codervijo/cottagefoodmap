@@ -77,3 +77,11 @@ to surface "last AI prompt" per project. Keep entries append-only.
 ## 2026-10-21 — v2.E: MA, IN, MD, MO, WI
 
 > "now build v2.E". One research agent per state, official sources only, quote logs in the session scratchpad. Fees/caps re-fetched independently (Md. 2026 ch. 320 $100,000 eff. 2026-10-01; RSMo § 196.298; IDOH homestead memo "No annual gross income restrictions" for HBVs; Wis. Stat. § 97.29 $5,000; Boston $100/yr). Indiana fee re-cited to the IDOH handbook (IC 16-42-5.3-12 only bars local licensure). Overrides added: MO coffee & tea → No, WI candy → No, WI honey → Unclear. ADR-011 records six calls. 214 pages, tsc + 46 tests green. Awaiting operator review before commit.
+
+## 2026-10-21 — growth reviews; compare page queued as v2.F
+
+> "update growth logs", "our compare tool already got a backlink - check on compare tool", then "option 1 — make it v2.F but dont do it yet". Filled the overdue reviews (2026-06-09 → shipped; 2026-09-15 titles/slash → shipped; v1.D → testing, extended to 2026-11-10) from GSC 28d to 2026-10-18. Compare: indexed, 16 imp / 0 clicks in 90d, no cited cells; the backlink couldn't be identified (Ahrefs 0 units until 2026-11-03; GSC Links report has no API). v2.F added to the PRD as planned.
+
+## 2026-10-21 — v3 tools added
+
+> "first brainstorm few more tools like compare tool", then "add these to v3 - all of them, why not". Added v3.B–v3.H (map, food × state grid, sales-cap checker, two-state diff, startup checklist, label checklist, sales-channel filter); v3 theme now "all 50 states + data tools"; ordering vs. state batches is a v3.A open question. Not started.
