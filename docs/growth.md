@@ -110,3 +110,12 @@ The high-volume generic head terms ("texas cottage food law") are increasingly a
 - **Action:** Rebuilt the 3 guide templates and the food pages from cited statements (median words: can I sell 146 → 624, license cost 80 → 749, labeling 143 → 345, food pages 152 → 951); FAQPage on 127 guides; disclaimer cut to one line; all 16 food-status overrides now cited.
 - **Result:** TBD — review 2026-11-18
 - **Learning:** TBD
+
+## 2026-10-21 — v2.E: 5 more states (MA, IN, MD, MO, WI), +50 pages
+- **Status:** active
+- **Hypothesis:** Batch 3 earns impressions the way batches 1 and 2 did, and lands on the deeper v2.D templates from day one, so its guides should index without the thin-page lag.
+- **KPI:** indexed count of the 50 new URLs (`lamill settings gsc recrawl`); impressions on `/guides/*/{massachusetts,indiana,maryland,missouri,wisconsin}/`.
+- **Baseline (GSC 28d, 2026-09-21 → 2026-10-18):** site 2,558 imp · 28 clicks · 1.1% CTR · avg pos 12.9 (same window as the v2.D entry). v2.E URLs: 0 (not yet published).
+- **Action:** 5 state records researched from official sources (60 of 60 facts verified); fees and caps re-fetched independently; 214 pages built. v3 planning (v3.A) waits until these pages are indexed.
+- **Result:** TBD — review 2026-11-18
+- **Learning:** TBD

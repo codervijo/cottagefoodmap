@@ -73,3 +73,7 @@ to surface "last AI prompt" per project. Keep entries append-only.
 ## 2026-10-21 — v2.D: guide depth
 
 > "never invent things. Be sure to always cite the sources". Rule recorded in the v2.D row and ADR-010. New `src/data/guide.ts` (cited statements) + `src/components/guide/`; sell, license-cost, labeling, and food pages rebuilt from facts only. An agent checked all 16 food-status overrides against their official pages (all confirmed; IL honey and IL pickles wording corrected) and they now carry `sources`. Sample label dropped (would imply unstated layout rules). `guides.test.js`: override sources, guide → state + hub links, FAQPage matches visible text, no 8+ word sentence on > 15 pages. GSC baseline in growth.md. tsc clean, 46 tests green. Awaiting operator review before commit.
+
+## 2026-10-21 — v2.E: MA, IN, MD, MO, WI
+
+> "now build v2.E". One research agent per state, official sources only, quote logs in the session scratchpad. Fees/caps re-fetched independently (Md. 2026 ch. 320 $100,000 eff. 2026-10-01; RSMo § 196.298; IDOH homestead memo "No annual gross income restrictions" for HBVs; Wis. Stat. § 97.29 $5,000; Boston $100/yr). Indiana fee re-cited to the IDOH handbook (IC 16-42-5.3-12 only bars local licensure). Overrides added: MO coffee & tea → No, WI candy → No, WI honey → Unclear. ADR-011 records six calls. 214 pages, tsc + 46 tests green. Awaiting operator review before commit.

@@ -1,12 +1,12 @@
 # Architecture — cottagefoodmap.com
 
-Status as of v2.D (2026-10-21). Roadmap and phases live in `docs/prd.md`.
+Status as of v2.E (2026-10-21). Roadmap and phases live in `docs/prd.md`.
 
 ## 1. Overview
 
 A fully static Astro site. All content is generated at build time from typed state-law data in
 `src/data/`; there is no server runtime, database, or CMS. Every factual field carries its own
-source URL and verification date, and pages render those citations inline. Output is 164
+source URL and verification date, and pages render those citations inline. Output is 214
 prerendered HTML pages plus `sitemap-index.xml`, served by Cloudflare.
 
 ```
@@ -20,7 +20,7 @@ src/data/phrases.ts ───┘                                            dist
 | Path | Role |
 |---|---|
 | `src/data/schema.ts` | `StateLaw` interface, `Fact<T>` (value + `source_url` + `last_verified`) / `Unverified` union, `isUnverified` guard |
-| `src/data/states/<state>.ts` | One `StateLaw` record per state, 12 facts each, checked against official sources listed in `sources`: CA, FL, NY, OH, TX (re-verified 2026-09-15, v1.D); PA, IL, GA, NC, MI (2026-09-25, v2.B); NJ, VA, WA, AZ, TN (2026-10-05, v2.C) |
+| `src/data/states/<state>.ts` | One `StateLaw` record per state, 12 facts each, checked against official sources listed in `sources`: CA, FL, NY, OH, TX (re-verified 2026-09-15, v1.D); PA, IL, GA, NC, MI (2026-09-25, v2.B); NJ, VA, WA, AZ, TN (2026-10-05, v2.C); MA, IN, MD, MO, WI (2026-10-21, v2.E) |
 | `src/data/states/index.ts` | `STATES` (sorted by name), `STATES_BY_SLUG`, `getState` |
 | `src/data/foods.ts` | 7 `FoodCategory` entries with substring `match` terms; `foodMatches`, `statusForFood`, `STATUS_ANSWER` |
 | `src/data/format.ts` | Shared display strings: `channelLabel` (Yes / No / No — not authorized / Not addressed), `capLabel` (all tiers), `capAmounts` |
@@ -71,13 +71,13 @@ src/data/phrases.ts ───┘                                            dist
 | Route | Source | Count |
 |---|---|---|
 | `/` | `pages/index.astro` (own head tags, not `Seo.astro`) | 1 |
-| `/states/`, `/states/<state>/` | `pages/states/` | 1 + 15 |
+| `/states/`, `/states/<state>/` | `pages/states/` | 1 + 20 |
 | `/compare/` | `pages/compare.astro` | 1 |
 | `/foods/`, `/foods/<food>/` | `pages/foods/` | 1 + 7 |
 | `/guides/` | `pages/guides/index.astro` | 1 |
-| `/guides/license-cost/<state>/` | title/description include the cost answer | 15 |
-| `/guides/labeling/<state>/` | | 15 |
-| `/guides/sell/<food>/<state>/` | title ends with `STATUS_ANSWER`; description adds permit · fee · cap; matched list items, list notes, other notes naming the food, Q&A (permit, fee, cap, channels, training/inspection) with FAQPage, label lines naming the food, links to the state's other 6 food guides — every statement cited | 105 |
+| `/guides/license-cost/<state>/` | title/description include the cost answer | 20 |
+| `/guides/labeling/<state>/` | | 20 |
+| `/guides/sell/<food>/<state>/` | title ends with `STATUS_ANSWER`; description adds permit · fee · cap; matched list items, list notes, other notes naming the food, Q&A (permit, fee, cap, channels, training/inspection) with FAQPage, label lines naming the food, links to the state's other 6 food guides — every statement cited | 140 |
 | `/about/` | | 1 |
 | `404.html` | `pages/404.astro` — noindex, not in sitemap | 1 |
 
@@ -162,6 +162,30 @@ Cloudflare 308s the slashless form. Enforced by `trailing-slash.test.js`.
   The planned sample label was dropped: generating one from free-text rules would imply layout rules
   no source states.
 
+- **ADR-011 (v2.E) — Same rule (ADR-006/008/010) applied to v2.E.** Six calls:
+  - **Missouri coffee & tea = No; candy and honey = Unclear.** DHSS says baked goods, canned jams or
+    jellies, and dried herbs are "the only items" and other foods "cannot be sold or claimed under the
+    Missouri Cottage Law exemption." Candy (freeze-dried, via the Food Code stand exemption where local
+    law allows) and honey (a raw agricultural commodity) have a separate route, so they follow the
+    Georgia/New York precedent; coffee and tea have none.
+  - **Wisconsin honey = Unclear, candy = No (overrides).** Own-hive honey needs no DATCP license under a
+    separate exemption (§ 97.29(1)(h)8.), the New York pattern. Candy is unbaked, and since 2024 WI App 69
+    the court protection covers only baked goods; the override makes the answer independent of list
+    wording ("candies" doesn't match the `candy` term).
+  - **Wisconsin channels follow the home-baker route.** DATCP's baker guidance says only "directly to
+    consumers": online and delivery are Not addressed, out-of-state is `not_authorized`. The stricter
+    home-canned rules (no internet or out-of-state sales) are in the channel notes.
+  - **Indiana models the home-based vendor route (IC 16-42-5.3).** HEA 1424's homestead-vendor route
+    (IC 16-42-5.4, from 2026-07-01) is described in caveats, as Virginia's permit route is. The schema
+    holds one program per state.
+  - **Massachusetts out-of-state = Yes.** MA uses a local permit, not an exemption, so `not_authorized`
+    doesn't apply; MDPH's Q&A tells sellers going to another state to comply with federal law and that
+    state's law, which addresses the channel without barring it (the Pennsylvania case in ADR-008).
+    Boston bars it locally; the notes say so. `allows_all_except_prohibited` follows 105 CMR 590.001(C),
+    which defines cottage food as non-TCS baked goods, jams, jellies, "and other" non-TCS foods.
+  - **Maryland cap = $100,000** from the enacted 2026 chapter law, though COMAR, MDH's guidelines, and the
+    General Assembly's statute page still show $50,000; the notes and caveats say so.
+
 ## 7. Tracked refactors
 
 - **Text-based food matching.** Status still depends on list wording. v1.D narrowed matching to
@@ -185,6 +209,6 @@ Cloudflare 308s the slashless form. Enforced by `trailing-slash.test.js`.
 - **Hard-to-fetch official sources** (relevant to the v4 source watcher): cdph.ca.gov serves an
   incomplete TLS certificate chain (strict clients fail); agriculture.ny.gov returns 403 to
   non-browser clients for PDFs and forms; statutes.capitol.texas.gov is a JavaScript shell (use
-  tcss.legis.texas.gov for text); agri.ohio.gov 404s some non-browser requests. Added in v2.B: ilga.gov serves an incomplete TLS chain; rules.sos.ga.gov returns 403 to curl; legis.ga.gov and palegis.us statute pages are JavaScript shells (use the PDF views). Added in v2.C: apps.azsos.gov (A.A.C. PDFs) returns a Cloudflare 403 challenge; azdhs.gov loads page sections by POST (JS shell); lis.virginia.gov bill pages are JS shells (LIS public API works) and legacylis.virginia.gov was intermittently down; Tennessee's consolidated code is on Lexis (JS shell; cite session laws); publications.tnsosfiles.com 403s plain curl; old WSDA cottage-food URLs 404 (live: agr.wa.gov/cottagefood).
+  tcss.legis.texas.gov for text); agri.ohio.gov 404s some non-browser requests. Added in v2.B: ilga.gov serves an incomplete TLS chain; rules.sos.ga.gov returns 403 to curl; legis.ga.gov and palegis.us statute pages are JavaScript shells (use the PDF views). Added in v2.C: apps.azsos.gov (A.A.C. PDFs) returns a Cloudflare 403 challenge; azdhs.gov loads page sections by POST (JS shell); lis.virginia.gov bill pages are JS shells (LIS public API works) and legacylis.virginia.gov was intermittently down; Tennessee's consolidated code is on Lexis (JS shell; cite session laws); publications.tnsosfiles.com 403s plain curl; old WSDA cottage-food URLs 404 (live: agr.wa.gov/cottagefood). Added in v2.E: www.mass.gov returns 403 to curl and WebFetch (read via a reader proxy); MDH's cottage food page loads its content by JavaScript; dsd.maryland.gov COMAR links redirect to regs.maryland.gov; iga.in.gov serves the JS app unless the request sends `Accept: application/pdf`; in.gov/health/food-protection/home-based-vendors/ 404s; old health.mo.gov /safety/foodsafety/ URLs redirect; DATCP's obvious home-baked URLs 404 (live: /Licenses_Permits/HomeBakers.aspx).
 - **Texas sales cap** is CPI-U adjusted by DSHS annually; no adjusted figure was published on the
   official sources checked 2026-09-15, so the site shows the statutory $150,000.

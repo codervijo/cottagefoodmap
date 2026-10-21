@@ -14,11 +14,17 @@ import { virginia } from "./virginia";
 import { washington } from "./washington";
 import { arizona } from "./arizona";
 import { tennessee } from "./tennessee";
+import { massachusetts } from "./massachusetts";
+import { indiana } from "./indiana";
+import { maryland } from "./maryland";
+import { missouri } from "./missouri";
+import { wisconsin } from "./wisconsin";
 
 export const STATES: StateLaw[] = [
   texas, california, florida, newYork, ohio,
   pennsylvania, illinois, georgia, northCarolina, michigan,
   newJersey, virginia, washington, arizona, tennessee,
+  massachusetts, indiana, maryland, missouri, wisconsin,
 ].sort((a, b) => a.name.localeCompare(b.name));
 
 export const STATES_BY_SLUG: Record<string, StateLaw> = Object.fromEntries(
