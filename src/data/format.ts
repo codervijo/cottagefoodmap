@@ -11,7 +11,21 @@ export function channelLabel(v: ChannelStatus): string {
 
 export const isTiered = (v: number | "none" | SalesCapTier[]): v is SalesCapTier[] => Array.isArray(v);
 
-const usd = (n: number) => `$${n.toLocaleString("en-US")}`;
+export const usd = (n: number) => `$${n.toLocaleString("en-US")}`;
+
+// ISO date (YYYY-MM-DD) → "Oct 5, 2026", the form used next to every citation.
+export function formatDate(iso: string): string {
+  try {
+    return new Date(iso + "T00:00:00Z").toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+      timeZone: "UTC",
+    });
+  } catch {
+    return iso;
+  }
+}
 
 // Every tier is shown; showing only the highest reads as a single (wrong) cap.
 export function capLabel(v: number | "none" | SalesCapTier[]): string {

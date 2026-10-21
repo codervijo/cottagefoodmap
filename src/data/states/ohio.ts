@@ -47,6 +47,10 @@ export const ohio: StateLaw = {
     honey: {
       status: "restricted",
       reason: "Ohio's cottage food list includes only flavored honey produced by a beekeeper exempt under ORC 3715.021(A). Plain honey is not a listed cottage food; a beekeeper who jars honey at least 75% from their own hives is covered by that separate exemption.",
+      sources: [
+        { source_url: "https://codes.ohio.gov/ohio-administrative-code/rule-901:3-20-04", source_title: "Ohio Adm. Code 901:3-20-04 (approved cottage food products)", last_verified: "2026-10-21" },
+        { source_url: "https://codes.ohio.gov/ohio-revised-code/section-3715.021", source_title: "Ohio Rev. Code § 3715.021", last_verified: "2026-10-21" },
+      ],
     },
   },
   allowed_foods: {

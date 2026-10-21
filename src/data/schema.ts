@@ -52,7 +52,12 @@ export interface StateLaw {
   allows_all_except_prohibited?: boolean;
   // Per food-category status when list matching can't express the source (keyed by
   // FoodCategory slug). `reason` must restate what the cited source says.
-  food_status_overrides?: Record<string, { status: "allowed" | "restricted" | "prohibited" | "unclear"; reason: string }>;
+  food_status_overrides?: Record<string, {
+    status: "allowed" | "restricted" | "prohibited" | "unclear";
+    reason: string;
+    // Official source(s) for the reason, first one primary; each must say what it's cited for.
+    sources: { source_url: string; source_title?: string; last_verified: string }[];
+  }>;
   allowed_foods: Fact<string[]>;
   prohibited_foods: Fact<string[]>;
   labeling_requirements: Fact<string[]>;

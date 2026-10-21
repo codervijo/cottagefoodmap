@@ -1,6 +1,6 @@
 # Architecture — cottagefoodmap.com
 
-Status as of v2.C (2026-10-05). Roadmap and phases live in `docs/prd.md`.
+Status as of v2.D (2026-10-21). Roadmap and phases live in `docs/prd.md`.
 
 ## 1. Overview
 
@@ -24,6 +24,8 @@ src/data/phrases.ts ───┘                                            dist
 | `src/data/states/index.ts` | `STATES` (sorted by name), `STATES_BY_SLUG`, `getState` |
 | `src/data/foods.ts` | 7 `FoodCategory` entries with substring `match` terms; `foodMatches`, `statusForFood`, `STATUS_ANSWER` |
 | `src/data/format.ts` | Shared display strings: `channelLabel` (Yes / No / No — not authorized / Not addressed), `capLabel` (all tiers), `capAmounts` |
+| `src/data/guide.ts` | Cited statements for guide pages: each restates one verified `Fact` and carries its citation (`permitStatement`, `costStatement`, `capStatements`, `channelStatement`, `foodNotes`, `overrideStatement`, …); `faqJsonLd` builds FAQPage markup from the same objects the page renders |
+| `src/components/guide/` | `Cite.astro` (source link + verified date), `CitedList.astro` (statements, each followed by its citation), `QaSection.astro` (question headings + FAQPage JSON-LD) |
 | `src/data/phrases.ts` | Short data-derived phrases for titles/descriptions (`permitPhrase`, `costPhrase`, `costTitle`, `capPhrase`, `joinPhrases`); unverified facts return `null` |
 | `src/layouts/Layout.astro` | HTML shell, header nav, footer disclaimer, site-wide `WebSite` JSON-LD, `og:image` (`/og.png`), GA4 (only when `PUBLIC_GA_ID` is set at build) |
 | `src/components/Seo.astro` | Per-page `<title>`, description, canonical (forced trailing slash), Open Graph, BreadcrumbList JSON-LD (Home › section index › page; `crumb` prop names the page) |
@@ -32,7 +34,7 @@ src/data/phrases.ts ───┘                                            dist
 | `src/components/Fact.tsx` | React: renders one `Fact<T>` with source link and verified date |
 | `src/components/Disclaimer.astro` / `.tsx` | "Not legal advice" notice |
 | `src/pages/` | Routes — see §4 |
-| `src/__tests__/` | Vitest: `seo.test.js`, `trailing-slash.test.js`, `foods.test.ts`, `smoke.test.js`, `built-head.test.js` (reads `dist/`; run after build) |
+| `src/__tests__/` | Vitest: `seo.test.js`, `trailing-slash.test.js`, `foods.test.ts`, `smoke.test.js`, `built-head.test.js` and `guides.test.js` (read `dist/`; run after build) |
 | `genai/` | Original Lovable/TanStack Start export the Astro port was translated from (v1.B). Reference only; not built |
 | `public/` | `_headers` (cache + security headers), `robots.txt`, `favicon.svg`, IndexNow key file |
 
@@ -57,7 +59,8 @@ src/data/phrases.ts ───┘                                            dist
   list (Texas since SB 541). A food with no prohibited match is then `allowed`.
 - **`food_status_overrides`** (optional, keyed by food slug) — explicit status plus a `reason`
   restating the source, for cases list matching can't express (e.g. Ohio lists only *flavored*
-  honey). The reason is shown on the guide page.
+  honey). The reason is shown on the guide page, with its own `sources` (one or more official
+  citations; required since v2.D).
 - **Food status** is derived. `statusForFood`: override if present; else `foodMatches` returns
   the state's allowed/prohibited list items containing a category `match` term at a word start
   (`pie` matches "pies", not "Krispies"). Both lists match → `restricted`; prohibited only →
@@ -74,7 +77,7 @@ src/data/phrases.ts ───┘                                            dist
 | `/guides/` | `pages/guides/index.astro` | 1 |
 | `/guides/license-cost/<state>/` | title/description include the cost answer | 15 |
 | `/guides/labeling/<state>/` | | 15 |
-| `/guides/sell/<food>/<state>/` | title ends with `STATUS_ANSWER`; description adds permit · fee · cap; lists matched items with sources | 105 |
+| `/guides/sell/<food>/<state>/` | title ends with `STATUS_ANSWER`; description adds permit · fee · cap; matched list items, list notes, other notes naming the food, Q&A (permit, fee, cap, channels, training/inspection) with FAQPage, label lines naming the food, links to the state's other 6 food guides — every statement cited | 105 |
 | `/about/` | | 1 |
 | `404.html` | `pages/404.astro` — noindex, not in sitemap | 1 |
 
@@ -151,6 +154,14 @@ Cloudflare 308s the slashless form. Enforced by `trailing-slash.test.js`.
     `SalesCapTier` would read as the overall cap. Virginia honey = "with limits", not Unclear:
     unlike Georgia and New York, its honey exemption is in the same § 3.2-5130.
 
+- **ADR-010 (v2.D) — Guides restate cited facts; nothing else.** Operator rule (2026-10-21): never
+  invent anything, always cite. Guide prose is generated from `Fact`s via `guide.ts`, and each
+  statement renders with the citation of the Fact it restates. The only uncited text is a definition
+  of a site term ("with limits") or a count computed from cited data. A state with sparse facts gets a
+  shorter guide, not filler. Overrides, the one place a claim had no citation, now require `sources`.
+  The planned sample label was dropped: generating one from free-text rules would imply layout rules
+  no source states.
+
 ## 7. Tracked refactors
 
 - **Text-based food matching.** Status still depends on list wording. v1.D narrowed matching to
@@ -161,6 +172,13 @@ Cloudflare 308s the slashless form. Enforced by `trailing-slash.test.js`.
 - **Duplicate head tags.** `Layout.astro` emits site-level `og:type`/`og:site_name`/`twitter:card`
   and `Seo.astro` emits per-page `og:type`; `index.astro` hand-writes its own head instead of
   using `Seo.astro`. Consolidate into one head component.
+
+- **One citation per fact.** A `Fact` has a single `source_url`, but some `notes` restate a second
+  source (e.g. Virginia's labeling notes come from the VDACS FAQ while the fact cites the statute).
+  Guides now show every note with its fact's citation, which makes this visible. Candidate fix: an
+  optional `sources` list on `Fact`, like overrides have since v2.D.
+- **Fee term not stored.** `license_cost_usd` is a bare number; NJ ($100) and WA ($355) are per two
+  years, stated only in notes. The license-cost fee table shows the number without the term.
 
 ## 8. Known issues
 

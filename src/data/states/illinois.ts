@@ -54,15 +54,25 @@ export const illinois: StateLaw = {
   food_status_overrides: {
     honey: {
       status: "restricted",
-      reason: "IDPH's Cottage Food Guide says honey from your own beehives is \"not considered a cottage food product\" (it's regulated separately), while honey with an ingredient infused or whipped into it, made in a home kitchen, falls under the Cottage Food Law.",
+      reason: "IDPH's Cottage Food Guide says honey from your own beehives is \"not considered a cottage food product\" (it's regulated under the USDA), while honey with an ingredient infused or whipped into it, made in a home kitchen, falls under the Cottage Food Law.",
+      sources: [
+        { source_url: IL_GUIDE, source_title: IL_GUIDE_TITLE, last_verified: "2026-10-21" },
+      ],
     },
     "pickles-and-fermented": {
       status: "restricted",
-      reason: "410 ILCS 625/4(b)(2)–(3): to sell a fermented or acidified food, the operator must submit a USDA- or extension-tested recipe, or a written food safety plan plus a pH test for each product category. Canned products must be processed in a boiling water bath in a Mason-style jar or glass container; uncanned ones must be kept at or below 41 degrees. Canned tomato products (e.g., salsa) need an exactly followed tested recipe or an annual commercial lab test ((b)(1.6)).",
+      reason: "410 ILCS 625/4(b)(2)–(3): to sell a fermented or acidified food, the operator must submit a USDA- or extension-tested recipe, or a written food safety plan plus a pH test for each product category. Canned products must be processed in a boiling water bath in a Mason-style jar or glass container; uncanned ones must be kept at or below 41 degrees. Canned tomatoes or canned products containing tomatoes need an exactly followed tested recipe or an annual commercial lab test ((b)(1.6)).",
+      sources: [
+        { source_url: IL_STATUTE, source_title: `${IL_STATUTE_TITLE}, subsec. (b)(1.6), (b)(2)–(3)`, last_verified: "2026-10-21" },
+      ],
     },
     "dried-goods": {
       status: "restricted",
       reason: "410 ILCS 625/4(b)(1.5) allows most dried foods but excludes dehydrated tomato or melon.",
+      sources: [
+        { source_url: IL_STATUTE, source_title: `${IL_STATUTE_TITLE}, subsec. (b)(1.5)`, last_verified: "2026-10-21" },
+        { source_url: IL_GUIDE, source_title: `${IL_GUIDE_TITLE}, p. 11`, last_verified: "2026-10-21" },
+      ],
     },
   },
   allowed_foods: {

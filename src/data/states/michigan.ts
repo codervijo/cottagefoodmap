@@ -64,6 +64,10 @@ export const michigan: StateLaw = {
     honey: {
       status: "restricted",
       reason: "MDARD lists flavored honey as an allowed cottage food, but says honey and maple syrup are not considered cottage foods; they have their own licensing exemptions under the Food Law.",
+      sources: [
+        { source_url: MI_FOODS, source_title: MI_FOODS_TITLE, last_verified: "2026-10-21" },
+        { source_url: "https://www.michigan.gov/mdard/food-dairy/maple-syrup-and-honey", source_title: "MDARD — Maple Syrup and Honey", last_verified: "2026-10-21" },
+      ],
     },
   },
   allowed_foods: {

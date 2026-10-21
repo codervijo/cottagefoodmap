@@ -2,8 +2,13 @@
 import Layout from "../../../layouts/Layout.astro";
 import Seo from "../../../components/Seo.astro";
 import Disclaimer from "../../../components/Disclaimer.astro";
+import Cite from "../../../components/guide/Cite.astro";
+import CitedList from "../../../components/guide/CitedList.astro";
+import QaSection from "../../../components/guide/QaSection.astro";
 import { STATES } from "../../../data/states";
+import { FOODS } from "../../../data/foods";
 import { isUnverified } from "../../../data/schema";
+import { factNotes, foodLabelLines, type Cited, type QA } from "../../../data/guide";
 
 export function getStaticPaths() {
   return STATES.map((state) => ({ params: { state: state.slug }, props: { state } }));
@@ -11,12 +16,27 @@ export function getStaticPaths() {
 
 const { state } = Astro.props;
 const lab = state.labeling_requirements;
+const lines = isUnverified(lab) ? [] : lab.value;
+const notes = factNotes(lab);
+
+// Questions asked only when the state's cited label rules address them; the answer is the
+// matching requirement lines verbatim.
+const linesMatching = (re: RegExp): Cited[] =>
+  isUnverified(lab) ? [] : lines.filter((l) => re.test(l)).map((l) => ({ text: l, cite: lab }));
+const qas: QA[] = [
+  { q: `What statement has to be printed on a ${state.name} cottage food label?`, a: linesMatching(/["“]/) },
+  { q: `Does a ${state.name} cottage food label need allergen information?`, a: linesMatching(/allergen/i) },
+  { q: `Do ${state.name} cottage foods need a nutrition facts panel?`, a: linesMatching(/nutrition/i) },
+  { q: `Can I use a sign instead of a label in ${state.name}?`, a: linesMatching(/\bsign\b/i) },
+];
+
+const byFood = FOODS.map((f) => ({ food: f, lines: foodLabelLines(state, f) })).filter((x) => x.lines.length > 0);
 ---
 <Layout>
   <Seo
     slot="head"
     title={`Cottage Food Labeling Requirements in ${state.name}`}
-    description={`Required cottage food label elements in ${state.name}, with the official source.`}
+    description={`The ${lines.length} label requirements for cottage food sold in ${state.name}, with the official source for each.`}
     path={`/guides/labeling/${state.slug}/`}
     crumb={`Labeling in ${state.name}`}
     ogType="article"
@@ -25,32 +45,57 @@ const lab = state.labeling_requirements;
   <article class="container-prose py-10">
     <p class="citation">Guide · Labeling</p>
     <h1 class="font-serif text-3xl md:text-4xl">Cottage food labeling requirements in {state.name}</h1>
-    <div class="mt-4"><Disclaimer /></div>
+    <div class="mt-3"><Disclaimer /></div>
 
     {isUnverified(lab) ? (
-      <p class="mt-6">Unverified — see the official {state.name} agency for current label rules.</p>
+      <p class="mt-6">Unverified. See the official {state.name} agency for current label rules.</p>
     ) : (
-      <>
+      <section>
         <p class="mt-6 text-lg">
-          Each package of cottage food sold in {state.name} must include:
+          {state.name}'s cited rules list {lines.length} labeling requirements for cottage food:
         </p>
-        <ul class="mt-4 list-disc space-y-1 pl-5">
-          {lab.value.map((l) => <li>{l}</li>)}
-        </ul>
-        <div class="mt-6 rounded border border-border bg-card p-4 text-sm">
-          <p class="font-medium">Source</p>
-          <p class="citation mt-1">
-            <a href={lab.source_url} target="_blank" rel="noopener noreferrer">
-              {lab.source_title ?? lab.source_url}
-            </a>{" "}
-            · Verified {lab.last_verified}
-          </p>
-        </div>
-      </>
+        <ol class="mt-4 list-decimal space-y-1 pl-5">
+          {lines.map((l) => <li>{l}</li>)}
+        </ol>
+        <p class="mt-2"><Cite cite={lab} /></p>
+        {notes && <CitedList items={[notes]} />}
+      </section>
     )}
 
-    <p class="mt-8 text-sm">
-      See the full <a href={`/states/${state.slug}/`}>{state.name} cottage food page</a>.
-    </p>
+    <QaSection heading={`${state.name} label questions`} qas={qas} />
+
+    {byFood.length > 0 && (
+      <section class="mt-10">
+        <h2 class="font-serif text-2xl">Label rules for specific foods in {state.name}</h2>
+        {byFood.map(({ food, lines: fl }) => (
+          <div class="mt-4">
+            <h3 class="font-serif text-lg">
+              <a href={`/guides/sell/${food.slug}/${state.slug}/`}>{food.name}</a>
+            </h3>
+            <ul class="mt-2 list-disc space-y-1 pl-5">
+              {fl.map((l) => <li>{l}</li>)}
+            </ul>
+            {!isUnverified(lab) && <p class="mt-1"><Cite cite={lab} /></p>}
+          </div>
+        ))}
+      </section>
+    )}
+
+    <section class="mt-10">
+      <h2 class="font-serif text-2xl">Labeling rules in other states</h2>
+      <ul class="mt-3 grid grid-cols-2 gap-2 text-sm md:grid-cols-3">
+        {STATES.filter((s) => s.slug !== state.slug).map((s) => (
+          <li><a href={`/guides/labeling/${s.slug}/`}>{s.name}</a></li>
+        ))}
+      </ul>
+    </section>
+
+    <nav class="double-rule mt-10 pt-6 text-sm" aria-label="Related">
+      <ul class="space-y-1">
+        <li>All {state.name} rules: <a href={`/states/${state.slug}/`}>{state.name} cottage food law</a></li>
+        <li>Fees: <a href={`/guides/license-cost/${state.slug}/`}>{state.name} cottage food license cost</a></li>
+        <li>All guides: <a href="/guides/">Cottage food guides</a></li>
+      </ul>
+    </nav>
   </article>
 </Layout>

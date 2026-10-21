@@ -1,0 +1,11 @@
+---
+// One citation: the source a statement comes from and when it was last checked.
+import type { Citation } from "../../data/guide";
+import { formatDate } from "../../data/format";
+const { cite } = Astro.props as { cite: Citation };
+---
+<span class="citation">
+  Source:
+  <a href={cite.source_url} target="_blank" rel="noopener noreferrer">{cite.source_title ?? cite.source_url}</a>
+  · Verified {formatDate(cite.last_verified)}
+</span>

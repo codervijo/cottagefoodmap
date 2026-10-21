@@ -68,6 +68,11 @@ export const newJersey: StateLaw = {
     "pickles-and-fermented": {
       status: "prohibited",
       reason: "NJDOH's approved product list includes no pickled, fermented, or acidified foods, and its prohibited ingredients list bars vegetables (fresh, cooked, fried, or dried) and peppers; applications with prohibited ingredients are denied. Hot sauce, barbecue sauce, and tomato ketchup or sauce are excluded from the vinegar and mustard category.",
+      sources: [
+        { source_url: NJ_APPROVED, source_title: NJ_APPROVED_TITLE, last_verified: "2026-10-21" },
+        { source_url: NJ_PROHIBITED, source_title: NJ_PROHIBITED_TITLE, last_verified: "2026-10-21" },
+        { source_url: "https://www.nj.gov/health/cottagefood/food-products/not-sure-need-assistance/", source_title: "NJDOH — Cottage Food: Not Sure/Need Assistance", last_verified: "2026-10-21" },
+      ],
     },
   },
   allowed_foods: {

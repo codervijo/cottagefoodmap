@@ -60,10 +60,16 @@ export const pennsylvania: StateLaw = {
     "pickles-and-fermented": {
       status: "restricted",
       reason: "PDA allows acid, acidified, and fermented foods (e.g., pickles, sauerkraut, kimchi, salsa) only if lab testing shows a finished equilibrium pH of 4.6 or below. Products between pH 4.2 and 4.6 need Process Authority approval, and batch pH records are required.",
+      sources: [
+        { source_url: PA_PACKET, source_title: PA_PACKET_TITLE, last_verified: "2026-10-21" },
+      ],
     },
     "coffee-and-tea": {
       status: "allowed",
       reason: "PDA lists coffee/tea among allowed dry goods. Only freshly brewed coffee and tea are excluded, as TCS foods.",
+      sources: [
+        { source_url: PA_PACKET, source_title: `${PA_PACKET_TITLE}, pp. 12, 15`, last_verified: "2026-10-21" },
+      ],
     },
   },
   allowed_foods: {

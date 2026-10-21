@@ -2,10 +2,18 @@
 import Layout from "../../../../layouts/Layout.astro";
 import Seo from "../../../../components/Seo.astro";
 import Disclaimer from "../../../../components/Disclaimer.astro";
+import Cite from "../../../../components/guide/Cite.astro";
+import CitedList from "../../../../components/guide/CitedList.astro";
+import QaSection from "../../../../components/guide/QaSection.astro";
 import { STATES } from "../../../../data/states";
 import { FOODS, STATUS_ANSWER, foodMatches, statusForFood } from "../../../../data/foods";
 import { isUnverified } from "../../../../data/schema";
 import { capPhrase, costPhrase, joinPhrases, permitPhrase } from "../../../../data/phrases";
+import {
+  agencyStatement, capStatements, channelNotes, channelStatement, compact, costStatement,
+  factNotes, foodLabelLines, foodNotes, inspectionStatement, overrideStatement, permitStatement,
+  trainingStatement, type QA,
+} from "../../../../data/guide";
 
 export function getStaticPaths() {
   return FOODS.flatMap((food) =>
@@ -19,7 +27,7 @@ export function getStaticPaths() {
 const { food, state } = Astro.props;
 const status = statusForFood(state, food);
 const matches = foodMatches(state, food);
-const override = state.food_status_overrides?.[food.slug];
+const override = overrideStatement(state, food);
 const foodName = food.name.toLowerCase();
 
 const headline =
@@ -30,6 +38,19 @@ const headline =
       : status === "prohibited"
         ? `No — ${foodName} is not allowed under ${state.name} cottage food law.`
         : `It's unclear from ${state.name}'s official list. Confirm with the state agency before producing.`;
+
+// What the status label means on this page, in terms of this state's lists.
+const statusBasis = override
+  ? `This answer comes from ${state.name}'s official guidance on ${foodName}, summarized below, rather than from its food lists alone.`
+  : status === "restricted"
+    ? `"With limits" means ${state.name}'s allowed list and its prohibited list both name ${foodName} items. Check which list your product is on.`
+    : status === "prohibited"
+      ? `${state.name}'s prohibited list names ${foodName} items, and its allowed list does not.`
+      : status === "unclear"
+        ? `${food.name} is not named on ${state.name}'s allowed or prohibited list.`
+        : state.allows_all_except_prohibited && matches.allowed.length === 0
+          ? `${state.name} allows any cottage food that isn't on its prohibited list, and no ${foodName} item is on that list.`
+          : `${state.name}'s allowed list names ${foodName} items, and its prohibited list does not.`;
 
 const shortAnswer =
   status === "allowed"
@@ -54,6 +75,28 @@ const allowedItems =
       ? allowedFact.value
       : [];
 const prohibitedFact = state.prohibited_foods;
+const listNotes = compact([
+  allowedItems.length > 0 ? factNotes(allowedFact) : null,
+  matches.prohibited.length > 0 || status === "unclear" ? factNotes(prohibitedFact) : null,
+]);
+
+const specific = foodNotes(state, food);
+const labelLines = foodLabelLines(state, food);
+const canSell = status !== "prohibited";
+
+const qas: QA[] = canSell
+  ? [
+      { q: `Do I need a permit to sell ${foodName} from home in ${state.name}?`, a: compact([permitStatement(state), agencyStatement(state)]) },
+      { q: `How much does a ${state.name} cottage food license cost?`, a: compact([costStatement(state)]) },
+      { q: `Is there a limit on how much I can sell in ${state.name}?`, a: capStatements(state) },
+      { q: `Where can I sell ${foodName} in ${state.name}?`, a: compact([channelStatement(state), channelNotes(state)]) },
+      { q: `Do I need training or a kitchen inspection in ${state.name}?`, a: compact([trainingStatement(state), inspectionStatement(state)]) },
+    ]
+  : [];
+
+const otherFoods = FOODS.filter((f) => f.slug !== food.slug).map((f) => ({ food: f, status: statusForFood(state, f) }));
+const sellable = otherFoods.filter((o) => o.status === "allowed" || o.status === "restricted");
+const labeling = state.labeling_requirements;
 ---
 <Layout>
   <Seo
@@ -70,51 +113,94 @@ const prohibitedFact = state.prohibited_foods;
     <h1 class="font-serif text-3xl md:text-4xl">
       Can I sell {foodName} from home in {state.name}?
     </h1>
-    <div class="mt-4"><Disclaimer /></div>
+    <div class="mt-3"><Disclaimer /></div>
 
     <p class="mt-6 text-lg leading-relaxed">{headline}</p>
-    {override && <p class="mt-3">{override.reason}</p>}
+    <p class="mt-2 text-sm text-muted-foreground">{statusBasis}</p>
+    {override && <CitedList items={[override]} />}
 
-    {allowedItems.length > 0 && !isUnverified(allowedFact) && (
-      <div class="mt-6 text-sm">
-        <p class="font-medium">On {state.name}'s allowed list</p>
-        <ul class="mt-1 list-disc pl-5">
-          {allowedItems.map((item) => <li>{item}</li>)}
-        </ul>
-        <p class="citation mt-1">
-          <a href={allowedFact.source_url} target="_blank" rel="noopener noreferrer">
-            {allowedFact.source_title ?? allowedFact.source_url}
-          </a>{" "}
-          · Verified {allowedFact.last_verified}
-        </p>
-      </div>
+    {(allowedItems.length > 0 || matches.prohibited.length > 0) && (
+      <section class="mt-10">
+        <h2 class="font-serif text-2xl">What {state.name}'s food lists say about {foodName}</h2>
+
+        {allowedItems.length > 0 && !isUnverified(allowedFact) && (
+          <div class="mt-4">
+            <h3 class="font-serif text-lg">{matches.allowed.length > 0 ? "On the allowed list" : "Allowed foods rule"}</h3>
+            <ul class="mt-2 list-disc space-y-1 pl-5">
+              {allowedItems.map((item) => <li>{item}</li>)}
+            </ul>
+            <p class="mt-1"><Cite cite={allowedFact} /></p>
+          </div>
+        )}
+
+        {matches.prohibited.length > 0 && !isUnverified(prohibitedFact) && (
+          <div class="mt-6">
+            <h3 class="font-serif text-lg">On the prohibited list</h3>
+            <ul class="mt-2 list-disc space-y-1 pl-5">
+              {matches.prohibited.map((item) => <li>{item}</li>)}
+            </ul>
+            <p class="mt-1"><Cite cite={prohibitedFact} /></p>
+          </div>
+        )}
+
+        {listNotes.length > 0 && (
+          <div class="mt-6">
+            <h3 class="font-serif text-lg">How {state.name} reads its lists</h3>
+            <CitedList items={listNotes} />
+          </div>
+        )}
+      </section>
     )}
 
-    {matches.prohibited.length > 0 && !isUnverified(prohibitedFact) && (
-      <div class="mt-6 text-sm">
-        <p class="font-medium">On {state.name}'s prohibited list</p>
-        <ul class="mt-1 list-disc pl-5">
-          {matches.prohibited.map((item) => <li>{item}</li>)}
-        </ul>
-        <p class="citation mt-1">
-          <a href={prohibitedFact.source_url} target="_blank" rel="noopener noreferrer">
-            {prohibitedFact.source_title ?? prohibitedFact.source_url}
-          </a>{" "}
-          · Verified {prohibitedFact.last_verified}
-        </p>
-      </div>
+    {specific.length > 0 && (
+      <section class="mt-10">
+        <h2 class="font-serif text-2xl">Other {state.name} rules that name {foodName}</h2>
+        <CitedList items={specific} />
+      </section>
     )}
 
-    <p class="mt-6 text-sm text-muted-foreground">
-      Status is derived from {state.name}'s official allowed and prohibited foods lists. Even when
-      a food is allowed, you still must meet that state's permit, labeling, and sales-channel rules.
-    </p>
+    <QaSection heading={`Selling ${foodName} in ${state.name}: permit, cost, and where to sell`} qas={qas} />
 
-    <p class="mt-8 text-sm">
-      Read the full
-      <a href={`/states/${state.slug}/`}>{state.name} cottage food page</a>{" "}
-      or see the
-      <a href={`/foods/${food.slug}/`}>{food.name}</a> category across states.
-    </p>
+    {canSell && !isUnverified(labeling) && (
+      <section class="mt-10">
+        <h2 class="font-serif text-2xl">Labeling {foodName} in {state.name}</h2>
+        <p class="mt-3">
+          {state.name}'s cited labeling rules list {labeling.value.length} requirements{labelLines.length > 0 ? `, including ${labelLines.length === 1 ? "one" : "these"} that name${labelLines.length === 1 ? "s" : ""} ${foodName}` : ""}.
+          The full list is in the <a href={`/guides/labeling/${state.slug}/`}>{state.name} labeling guide</a>.
+        </p>
+        {labelLines.length > 0 && (
+          <ul class="mt-2 list-disc space-y-1 pl-5">
+            {labelLines.map((l) => <li>{l}</li>)}
+          </ul>
+        )}
+        <p class="mt-1"><Cite cite={labeling} /></p>
+      </section>
+    )}
+
+    <section class="mt-10">
+      <h2 class="font-serif text-2xl">Other foods in {state.name}</h2>
+      {!canSell && sellable.length > 0 && (
+        <p class="mt-3">
+          {state.name}'s lists do allow {sellable.map((o) => o.food.name.toLowerCase()).join(", ")}, at least in part.
+        </p>
+      )}
+      <ul class="mt-3 grid grid-cols-1 gap-2 text-sm md:grid-cols-2">
+        {otherFoods.map((o) => (
+          <li>
+            <a href={`/guides/sell/${o.food.slug}/${state.slug}/`}>Selling {o.food.name.toLowerCase()} in {state.name}</a>{" "}
+            <span class="citation">· {STATUS_ANSWER[o.status]}</span>
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    <nav class="double-rule mt-10 pt-6 text-sm" aria-label="Related">
+      <ul class="space-y-1">
+        <li>All {state.name} rules: <a href={`/states/${state.slug}/`}>{state.name} cottage food law</a></li>
+        <li>{food.name} in every state: <a href={`/foods/${food.slug}/`}>{food.name} by state</a></li>
+        <li>Fees: <a href={`/guides/license-cost/${state.slug}/`}>{state.name} cottage food license cost</a></li>
+        <li>All guides: <a href="/guides/">Cottage food guides</a></li>
+      </ul>
+    </nav>
   </article>
 </Layout>

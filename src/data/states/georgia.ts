@@ -62,10 +62,17 @@ export const georgia: StateLaw = {
     honey: {
       status: "unclear",
       reason: "GDA's Cottage Food FAQ says honey and syrup are not considered cottage foods, because state regulatory requirements and exemptions for them differ, and refers producers to GDA's Food Safety Division. Honey is regulated outside the cottage food program; the FAQ doesn't say whether home honey sales are allowed.",
+      sources: [
+        { source_url: GA_FAQ, source_title: GA_FAQ_TITLE, last_verified: "2026-10-21" },
+      ],
     },
     "pickles-and-fermented": {
       status: "restricted",
       reason: "HB 398 lists dill pickles among non-potentially hazardous foods (O.C.G.A. § 26-2-470(7)). GDA's Cottage Food FAQ says cooked vegetable products such as salsas and tomato sauces do not qualify. Other pickled or fermented foods are not named.",
+      sources: [
+        { source_url: GA_HB398, source_title: `${GA_HB398_TITLE}, § 26-2-470(7)`, last_verified: "2026-10-21" },
+        { source_url: GA_FAQ, source_title: GA_FAQ_TITLE, last_verified: "2026-10-21" },
+      ],
     },
   },
   allowed_foods: {

@@ -1,0 +1,12 @@
+---
+// Cited statements as paragraphs, each followed by its own citation.
+import type { Cited } from "../../data/guide";
+import Cite from "./Cite.astro";
+const { items } = Astro.props as { items: Cited[] };
+---
+{items.map((c) => (
+  <div class="mt-3">
+    <p class="leading-relaxed">{c.text}</p>
+    {[c.cite, ...(c.more ?? [])].map((x) => <p class="mt-1"><Cite cite={x} /></p>)}
+  </div>
+))}

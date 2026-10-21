@@ -2,15 +2,26 @@
 import Layout from "../../layouts/Layout.astro";
 import Seo from "../../components/Seo.astro";
 import Disclaimer from "../../components/Disclaimer.astro";
-import { FOODS, statusForFood } from "../../data/foods";
+import Cite from "../../components/guide/Cite.astro";
+import CitedList from "../../components/guide/CitedList.astro";
+import { FOODS, STATUS_ANSWER, foodMatches, statusForFood } from "../../data/foods";
 import { STATES } from "../../data/states";
+import { isUnverified } from "../../data/schema";
+import { overrideStatement } from "../../data/guide";
 
 export function getStaticPaths() {
   return FOODS.map((food) => ({ params: { slug: food.slug }, props: { food } }));
 }
 
 const { food } = Astro.props;
-const rows = STATES.map((s) => ({ state: s, status: statusForFood(s, food) }));
+const rows = STATES.map((s) => ({
+  state: s,
+  status: statusForFood(s, food),
+  matches: foodMatches(s, food),
+  override: overrideStatement(s, food),
+}));
+const count = (st: string) => rows.filter((r) => r.status === st).length;
+const foodName = food.name.toLowerCase();
 ---
 <Layout>
   <Seo
@@ -49,10 +60,46 @@ const rows = STATES.map((s) => ({ state: s, status: statusForFood(s, food) }));
       ))}
     </ul>
     <p class="citation mt-4">
-      Status is derived from each state's allowed and prohibited lists. "Allowed with limits" means
-      both lists name items in this category. "Unclear" means the category is not named in the
-      official list — confirm with the cited state page.
+      Status comes from each state's allowed and prohibited lists, or from the state's own guidance
+      where the lists don't settle it. "Allowed with limits" means the state allows some products in
+      this category but not others. "Unclear" means the cited sources don't say either way.
     </p>
+
+    <p class="mt-6">
+      Of the {rows.length} states covered, {count("allowed")} allow {foodName}, {count("restricted")} allow it with limits,
+      {count("prohibited")} prohibit it, and in {count("unclear")} the official sources don't settle it.
+    </p>
+
+    <h2 class="mt-10 font-serif text-xl">What each state's lists say</h2>
+    {rows.map(({ state, status, matches, override }) => (
+      <section class="mt-6">
+        <h3 class="font-serif text-lg">
+          <a href={`/guides/sell/${food.slug}/${state.slug}/`}>{state.name}: {STATUS_ANSWER[status]}</a>
+        </h3>
+        {override && <CitedList items={[override]} />}
+        {!override && matches.allowed.length > 0 && !isUnverified(state.allowed_foods) && (
+          <div class="mt-2 text-sm">
+            <p>Allowed list:</p>
+            <ul class="list-disc pl-5">{matches.allowed.map((i) => <li>{i}</li>)}</ul>
+            <Cite cite={state.allowed_foods} />
+          </div>
+        )}
+        {!override && matches.prohibited.length > 0 && !isUnverified(state.prohibited_foods) && (
+          <div class="mt-2 text-sm">
+            <p>Prohibited list:</p>
+            <ul class="list-disc pl-5">{matches.prohibited.map((i) => <li>{i}</li>)}</ul>
+            <Cite cite={state.prohibited_foods} />
+          </div>
+        )}
+        {!override && matches.allowed.length === 0 && matches.prohibited.length === 0 && (
+          <p class="mt-2 text-sm">
+            {status === "allowed" && !isUnverified(state.allowed_foods)
+              ? <>{state.name} allows any cottage food not on its prohibited list, and no {foodName} item is on it. <Cite cite={state.allowed_foods} /></>
+              : <>Neither {state.name} list names {foodName}.{!isUnverified(state.allowed_foods) && <> <Cite cite={state.allowed_foods} /></>}</>}
+          </p>
+        )}
+      </section>
+    ))}
 
     <div class="mt-10">
       <h2 class="font-serif text-xl">Related categories</h2>

@@ -24,10 +24,17 @@ export const newYork: StateLaw = {
     honey: {
       status: "unclear",
       reason: "Honey is not on AGM's Home Processor lists. Honey from your own production is covered by a separate AGM exemption, not the Home Processor exemption.",
+      sources: [
+        { source_url: NY_AGENCY, source_title: `${NY_TITLE} (Approved and Prohibited Foods)`, last_verified: "2026-10-21" },
+        { source_url: NY_FLOWCHART, source_title: "NY Dept. of Agriculture & Markets — Home Processing Qualification Flowchart (rev. July 2026)", last_verified: "2026-10-21" },
+      ],
     },
     "coffee-and-tea": {
       status: "prohibited",
       reason: "AGM lists beverages and roasting or grinding coffee beans as prohibited. Tea is not named on either AGM list.",
+      sources: [
+        { source_url: NY_AGENCY, source_title: `${NY_TITLE} (Prohibited Foods)`, last_verified: "2026-10-21" },
+      ],
     },
   },
   allowed_foods: {

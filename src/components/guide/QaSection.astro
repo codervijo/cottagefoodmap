@@ -1,0 +1,22 @@
+---
+// Question-and-answer section. Each answer is cited statements; the FAQPage JSON-LD is
+// built from the same objects, so it always matches what the page shows.
+import type { QA } from "../../data/guide";
+import { faqJsonLd } from "../../data/guide";
+import CitedList from "./CitedList.astro";
+const { heading, qas } = Astro.props as { heading: string; qas: QA[] };
+const shown = qas.filter((x) => x.a.length > 0);
+const ld = faqJsonLd(shown);
+---
+{shown.length > 0 && (
+  <section class="mt-10">
+    <h2 class="font-serif text-2xl">{heading}</h2>
+    {shown.map((x) => (
+      <div class="mt-6">
+        <h3 class="font-serif text-lg">{x.q}</h3>
+        <CitedList items={x.a} />
+      </div>
+    ))}
+    {ld && <script type="application/ld+json" set:html={JSON.stringify(ld)} />}
+  </section>
+)}

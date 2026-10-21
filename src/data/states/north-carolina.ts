@@ -46,18 +46,31 @@ export const northCarolina: StateLaw = {
     "baked-goods": {
       status: "restricted",
       reason: "NCDA&CS allows baked goods that do not require refrigeration, but bakery products with cream or cream cheese fillings and cheesecakes are high-risk and not permitted. \"Moist\" breads/cakes, some pies, and homemade cream cheese frostings may require pH or water-activity testing.",
+      sources: [
+        { source_url: NC_AGENCY, source_title: NC_AGENCY_TITLE, last_verified: "2026-10-21" },
+      ],
     },
     honey: {
       status: "allowed",
       reason: "NCDA&CS's Application for Home Processor Inspection lists Honey among the production types an applicant can select. The Home Processor page's list of low-risk foods doesn't name honey.",
+      sources: [
+        { source_url: NC_APP, source_title: `${NC_APP_TITLE} (Section 3)`, last_verified: "2026-10-21" },
+        { source_url: NC_AGENCY, source_title: NC_AGENCY_TITLE, last_verified: "2026-10-21" },
+      ],
     },
     "pickles-and-fermented": {
       status: "restricted",
       reason: "NCDA&CS lists acid and acidified foods (e.g., pickles, BBQ sauce) as allowed, but asks producers to contact the office first. They must meet federal acidified-food rules (21 CFR 114 and 108), may need product testing with a Process Authority Letter, and may need to complete an Acidified Food Course.",
+      sources: [
+        { source_url: NC_AGENCY, source_title: NC_AGENCY_TITLE, last_verified: "2026-10-21" },
+      ],
     },
     "coffee-and-tea": {
       status: "unclear",
       reason: "NCDA&CS lists \"some liquids (i.e. ice tea, coffee, lemonade, etc.)\" as possible low-risk foods, but doesn't name roasted coffee beans or dry tea blends. Bottled water and juice products are not permitted.",
+      sources: [
+        { source_url: NC_AGENCY, source_title: NC_AGENCY_TITLE, last_verified: "2026-10-21" },
+      ],
     },
   },
   allowed_foods: {

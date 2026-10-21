@@ -1,5 +1,5 @@
 import type { ChannelStatus, Fact, SalesCapTier } from "../data/schema";
-import { capLabel, channelLabel, isTiered } from "../data/format";
+import { capLabel, channelLabel, formatDate, isTiered } from "../data/format";
 import { isUnverified } from "../data/schema";
 import type { ReactNode } from "react";
 
@@ -9,19 +9,6 @@ interface FactRowProps {
   // inference into a generic render callback is unreliable across call sites.
   fact: Fact<any>;
   render?: (value: any) => ReactNode;
-}
-
-function formatDate(iso: string) {
-  try {
-    return new Date(iso + "T00:00:00Z").toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-      timeZone: "UTC",
-    });
-  } catch {
-    return iso;
-  }
 }
 
 export function FactRow({ label, fact, render }: FactRowProps) {

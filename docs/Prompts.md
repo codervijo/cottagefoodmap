@@ -65,3 +65,11 @@ to surface "last AI prompt" per project. Keep entries append-only.
 ## 2026-10-05 — fill missing fields
 
 > "help me fill in any missing fields". Scaffold placeholders filled in `AI_AGENTS.md` (Goals from PRD §3, truncated ICP, duplicate Content strategy, out-of-scope, post-deploy checklist: GSC verified, sitemap submitted 2026-06-19), `docs/CLAUDE.md` (Project, Deferred decisions from PRD non-goals), `README.md`. `AI_AGENTS.md` versioning no longer allows `vN.X.Y` (matches `portfolio/AI_AGENTS.md`). Last unverified data field resolved: Pennsylvania training = No (3 Pa.C.S. § 6510(c), "Food establishments are exempt from this chapter"; farmers-market stands selling only non-TCS foods exempt under § 6510(b)(1)). 0 Unverified facts remain across 15 states.
+
+## 2026-10-21 — v2.C gate check; guide-depth audit; v2.D re-slotted
+
+> "run the gate check", then "are all filled in pages thick and useful based on our custom skill?", then "option 1 — make it v2.D". Gate: `lamill settings gsc recrawl` on v2.C's 50 URLs (`--no-append`): 48 PASS; `/guides/license-cost/virginia/` and `/guides/labeling/virginia/` are "Discovered – currently not indexed". Audit of `dist/` against write-lamill-seo-page: state pages thick (782–1,697 words); 135 guide and food pages thin (72–303 words, no H2s or FAQ, 1–2 internal links, disclaimer repeated on 144 pages). PRD: v2.D is now guide depth; the MA/IN/MD/MO/WI batch moved to v2.E. Awaiting operator sign-off on the v2.D breakdown before code.
+
+## 2026-10-21 — v2.D: guide depth
+
+> "never invent things. Be sure to always cite the sources". Rule recorded in the v2.D row and ADR-010. New `src/data/guide.ts` (cited statements) + `src/components/guide/`; sell, license-cost, labeling, and food pages rebuilt from facts only. An agent checked all 16 food-status overrides against their official pages (all confirmed; IL honey and IL pickles wording corrected) and they now carry `sources`. Sample label dropped (would imply unstated layout rules). `guides.test.js`: override sources, guide → state + hub links, FAQPage matches visible text, no 8+ word sentence on > 15 pages. GSC baseline in growth.md. tsc clean, 46 tests green. Awaiting operator review before commit.

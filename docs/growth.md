@@ -101,3 +101,12 @@ The high-volume generic head terms ("texas cottage food law") are increasingly a
 - **Action:** 5 state records researched from official sources (60 of 60 facts verified); 164 pages built. v2.D starts only after these pages are indexed.
 - **Result:** TBD — review 2026-11-02
 - **Learning:** TBD
+
+## 2026-10-21 — v2.D: guide depth (cited Q&A, fee table, per-state food detail)
+- **Status:** active
+- **Hypothesis:** The 135 guide and food pages were thin (72–303 words, no sections, no FAQ). Answering the follow-up questions from the cited data (permit, fee, cap, channels, training, food-specific notes) makes them worth landing on. That should lift CTR on "can I sell" guides already ranking near page 1, move license-cost and labeling guides up, and get the 2 Virginia guides still "Discovered – currently not indexed" crawled.
+- **KPI:** CTR and clicks on `/guides/sell/*`; avg position on `/guides/license-cost/*` and `/guides/labeling/*`; index status of `/guides/license-cost/virginia/` and `/guides/labeling/virginia/`.
+- **Baseline (GSC 28d, 2026-09-21 → 2026-10-18; page rows, so totals differ slightly from the site row):** site 2,558 imp · 28 clicks · 1.1% CTR · avg pos 12.9. Can I sell: 120 URLs, 1,678 imp · 26 clicks · pos 7.8. License cost: 15 URLs, 114 imp · 0 clicks · pos 17.4. Labeling: 17 URLs, 53 imp · 0 clicks · pos 29.1. Food pages: 7 URLs, 51 imp · 0 clicks · pos 8.5. State pages: 15 URLs, 666 imp · 3 clicks · pos 24.4. v2.C gate: 48 of 50 URLs indexed.
+- **Action:** Rebuilt the 3 guide templates and the food pages from cited statements (median words: can I sell 146 → 624, license cost 80 → 749, labeling 143 → 345, food pages 152 → 951); FAQPage on 127 guides; disclaimer cut to one line; all 16 food-status overrides now cited.
+- **Result:** TBD — review 2026-11-18
+- **Learning:** TBD
