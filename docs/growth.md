@@ -85,13 +85,13 @@ The high-volume generic head terms ("texas cottage food law") are increasingly a
 - **Learning:** Impressions on Texas pages grew about 3×, but clicks stayed at 1–2, too few to say whether corrected facts changed engagement. Extend one window.
 
 ## 2026-09-25 — v2.B: 5 more states (PA, IL, GA, NC, MI), +50 pages
-- **Status:** active
+- **Status:** shipped
 - **Hypothesis:** The same per-state template that already gets page-1 impressions for CA/TX guides will earn impressions for the 5 most populous uncovered states. Shipping 5 at a time (not 15) lets Google index each batch before the next.
 - **KPI:** indexed count of the 50 new URLs (`lamill settings gsc recrawl`); site impressions and clicks; impressions on `/guides/*/{pennsylvania,illinois,georgia,north-carolina,michigan}/`.
 - **Baseline (GSC 28d, 2026-08-26 → 2026-09-22):** site 1,090 imp · 9 clicks · 0.8% CTR · avg pos 24.0. New-state URLs: 0 (not yet published). Indexed: 61 of 63 sitemap URLs.
 - **Action:** 5 state records researched from official sources (59 of 60 facts verified); 114 pages built. v2.C starts only after these pages are indexed.
-- **Result:** TBD — review 2026-10-23
-- **Learning:** TBD
+- **Result:** (GSC 28d, 2026-09-23 → 2026-10-20; reviewed 2026-10-23) Indexed: 50 of 50 new URLs "Submitted and indexed" (URL Inspection API, 2026-10-23), including the 5 honey guides that were unknown to Google on 2026-10-05. New-state URLs: 48 page rows with impressions (slash variants counted separately), 507 imp · 5 clicks · pos 16.4. By state: PA 111 imp · 1 click · pos 13.4; IL 139 · 1 · 15.8; GA 95 · 0 · 22.3; NC 85 · 2 · 14.6; MI 77 · 1 · 16.6. State pages carry the most impressions (IL 74, GA 32, NC 27, MI 24, PA 23) at pos 14–40, 0 clicks; their queries are head terms ("cottage food law georgia", "illinois cottage laws") at pos 61–85. Guides rank higher with fewer impressions: `honey/illinois/` 16 imp · 1 click · pos 5.0, `baked-goods/pennsylvania/` 15 · 1 · 9.4, `coffee-and-tea/pennsylvania/` 23 · 0 · 9.3. Site 1,090 → 2,701 imp · 9 → 31 clicks · CTR 0.8% → 1.1% · pos 24.0 → 12.7.
+- **Learning:** The template generalizes: all 50 pages indexed and nearly all earned impressions within the window, so the batched-rollout gate worked. As on the v1 states, impressions come from state pages on head terms ranked too low to click, while guides rank on page 1 for narrow queries but have low volume. The site-level gain can't be credited to v2.B alone, because v2.C shipped 2026-10-05 inside the window (v2.D and v2.E shipped after it ended). Next: v2.D's review (2026-11-18) shows whether deeper guides turn these page-1 positions into clicks.
 
 ## 2026-10-05 — v2.C: 5 more states (NJ, VA, WA, AZ, TN), +50 pages
 - **Status:** active

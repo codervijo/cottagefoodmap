@@ -85,3 +85,7 @@ to surface "last AI prompt" per project. Keep entries append-only.
 ## 2026-10-21 — v3 tools added
 
 > "first brainstorm few more tools like compare tool", then "add these to v3 - all of them, why not". Added v3.B–v3.H (map, food × state grid, sales-cap checker, two-state diff, startup checklist, label checklist, sales-channel filter); v3 theme now "all 50 states + data tools"; ordering vs. state batches is a v3.A open question. Not started.
+
+## 2026-10-23 — v2.B growth review
+
+> "do the v2.B growth review". GSC 28d 2026-09-23 → 2026-10-20 via the portfolio GSC client (searchanalytics + URL Inspection API). All 50 v2.B URLs "Submitted and indexed"; 507 imp · 5 clicks · pos 16.4 across them. State pages take impressions on head terms at pos 61–85; guides rank 5–14 on narrow queries. Entry → shipped. v2.C (in-window) confounds the site totals.
