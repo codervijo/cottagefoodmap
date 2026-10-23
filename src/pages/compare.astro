@@ -1,72 +1,178 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import Seo from "../components/Seo.astro";
+import Disclaimer from "../components/Disclaimer.astro";
 import { STATES } from "../data/states";
-import { isUnverified } from "../data/schema";
-import { capLabel, channelLabel } from "../data/format";
+import { isUnverified, type ChannelStatus, type Fact, type StateLaw } from "../data/schema";
+import { capAmounts, channelLabel, formatDate, isTiered, usd } from "../data/format";
+import type { Citation } from "../data/guide";
 
-function cell(f, render) {
-  if (isUnverified(f)) return "—";
-  const v = f.value;
-  return render ? render(v) : String(v);
+// One table cell: the stored value plus the source and verified date of the Fact it comes
+// from (ADR-010). Tiered caps cite each tier, since each tier has its own source.
+type Cell = { lines: { text: string; cite: Citation }[] } | null;
+
+const yesNo = (v: boolean) => (v ? "Yes" : "No");
+const feeLabel = (v: number | "none" | "varies") =>
+  v === "none" ? "No state fee" : v === "varies" ? "Set locally" : v === 0 ? "Free" : usd(v);
+
+function cell<T>(f: Fact<T>, text: (v: T) => string): Cell {
+  return isUnverified(f) ? null : { lines: [{ text: text(f.value), cite: f }] };
 }
+
+function capCell(s: StateLaw): Cell {
+  const f = s.sales_cap_usd_annual;
+  if (isUnverified(f)) return null;
+  const v = f.value;
+  if (isTiered(v)) return { lines: v.map((t) => ({ text: `${t.class} ${usd(t.adjusted_usd)}`, cite: t })) };
+  return { lines: [{ text: v === "none" ? "No cap" : usd(v), cite: f }] };
+}
+
+const channelCell = (s: StateLaw, key: "online_in_state" | "online_out_of_state") =>
+  cell(s.sales_channels, (c) => channelLabel(c[key]));
+
+const columns: { label: string; cell: (s: StateLaw) => Cell }[] = [
+  { label: "Permit", cell: (s) => cell(s.permit_required, yesNo) },
+  { label: "State fee", cell: (s) => cell(s.license_cost_usd, feeLabel) },
+  { label: "Annual sales cap", cell: capCell },
+  { label: "Online (in-state)", cell: (s) => channelCell(s, "online_in_state") },
+  { label: "Out-of-state shipping", cell: (s) => channelCell(s, "online_out_of_state") },
+  { label: "Training", cell: (s) => cell(s.training_required, yesNo) },
+  { label: "Inspection", cell: (s) => cell(s.inspection_required, yesNo) },
+];
+
+// Column summaries: counts computed from the same verified facts the table shows.
+const n = STATES.length;
+const verifiedValues = <T,>(pick: (s: StateLaw) => Fact<T>): T[] =>
+  STATES.map(pick).flatMap((f) => (isUnverified(f) ? [] : [f.value]));
+const count = <T,>(xs: T[], p: (x: T) => boolean) => xs.filter(p).length;
+const unverifiedNote = (xs: unknown[]) => (xs.length < n ? ` ${n - xs.length} unverified.` : "");
+
+const permits = verifiedValues((s) => s.permit_required);
+const fees = verifiedValues((s) => s.license_cost_usd);
+const caps = verifiedValues((s) => s.sales_cap_usd_annual);
+const capped = caps.filter((v): v is Exclude<typeof v, "none"> => v !== "none");
+const capFigures = capped.flatMap(capAmounts);
+const channels = verifiedValues((s) => s.sales_channels);
+const training = verifiedValues((s) => s.training_required);
+const inspection = verifiedValues((s) => s.inspection_required);
+const feeCharged = fees.filter((v): v is number => typeof v === "number" && v > 0);
+
+function channelSummary(xs: ChannelStatus[]): string {
+  const parts = [
+    [count(xs, (v) => v === true), "Yes"],
+    [count(xs, (v) => v === false), "No"],
+    [count(xs, (v) => v === "not_authorized"), "No — not authorized"],
+    [count(xs, (v) => v === null), "Not addressed"],
+  ] as const;
+  return parts.filter(([k]) => k > 0).map(([k, l]) => `${l}: ${k}`).join(" · ") + ".";
+}
+
+const summaries: { label: string; text: string }[] = [
+  {
+    label: "Permit",
+    text: `${count(permits, (v) => v)} of ${n} states require a permit or registration; ${count(permits, (v) => !v)} do not.${unverifiedNote(permits)}`,
+  },
+  {
+    label: "State fee",
+    text:
+      `${count(fees, (v) => v === "none" || v === 0)} charge no state fee, ${feeCharged.length} charge one` +
+      (feeCharged.length ? ` (${usd(Math.min(...feeCharged))} to ${usd(Math.max(...feeCharged))}, as each source states them; the fee term is on each state's page)` : "") +
+      `, and ${count(fees, (v) => v === "varies")} leave fees to local governments.${unverifiedNote(fees)}`,
+  },
+  {
+    label: "Annual sales cap",
+    text:
+      `${caps.length - capped.length} set no overall cap; ${capped.length} set one` +
+      (capFigures.length ? `, from ${usd(Math.min(...capFigures))} to ${usd(Math.max(...capFigures))} a year` : "") +
+      `. ${count(capped, (v) => isTiered(v))} use tiers, and every tier is shown.${unverifiedNote(caps)}`,
+  },
+  { label: "Online (in-state)", text: channelSummary(channels.map((c) => c.online_in_state)) },
+  {
+    label: "Out-of-state shipping",
+    text:
+      channelSummary(channels.map((c) => c.online_out_of_state)) +
+      ` "Not authorized" means a state exemption that cannot reach sales in other states; "Not addressed" means the official source is silent.`,
+  },
+  {
+    label: "Training",
+    text: `${count(training, (v) => v)} of ${n} states require food safety training; ${count(training, (v) => !v)} do not.${unverifiedNote(training)}`,
+  },
+  {
+    label: "Inspection",
+    text: `${count(inspection, (v) => v)} of ${n} states require a home kitchen inspection; ${count(inspection, (v) => !v)} do not.${unverifiedNote(inspection)}`,
+  },
+];
 ---
 <Layout>
   <Seo
     slot="head"
-    title="Compare Cottage Food Laws Across U.S. States"
-    description="Side-by-side comparison of cottage food laws: permits, sales caps, online sales, training, and inspections."
+    title={`Compare Cottage Food Laws in ${n} U.S. States`}
+    description={`Side-by-side cottage food rules for ${n} states: permits, fees, sales caps, online and out-of-state sales, training, and inspections. Every cell cites its official source.`}
     path="/compare/"
+    crumb="Compare states"
   />
 
   <div class="container-prose py-10">
-    <h1 class="font-serif text-3xl md:text-4xl">Compare U.S. Cottage Food Laws</h1>
+    <h1 class="font-serif text-3xl md:text-4xl">Compare U.S. cottage food laws</h1>
     <p class="mt-3 max-w-2xl text-muted-foreground">
-      A side-by-side comparison of the cottage food rules in covered states. Click a state name
-      for the full sourced page.
+      The cottage food rules in the {n} states this site covers, side by side. Each cell shows the
+      official source it comes from and the date it was last verified. Click a state name for its
+      full sourced page.
     </p>
-    <div class="mt-6 overflow-x-auto rounded border border-border">
-      <table class="w-full min-w-[800px] border-collapse text-sm">
+    <div class="mt-3"><Disclaimer /></div>
+
+    <section class="mt-8">
+      <h2 class="font-serif text-2xl">What the table shows</h2>
+      <dl class="mt-3 space-y-2">
+        {summaries.map((x) => (
+          <div>
+            <dt class="inline font-medium">{x.label}:</dt>
+            <dd class="inline"> {x.text}</dd>
+          </div>
+        ))}
+      </dl>
+    </section>
+
+    <div class="mt-8 overflow-x-auto rounded border border-border">
+      <table class="w-full min-w-[960px] border-collapse text-sm">
         <thead>
           <tr class="bg-muted text-left">
             <th class="px-3 py-2 font-serif text-sm font-semibold">State</th>
-            <th class="px-3 py-2 font-serif text-sm font-semibold">Permit</th>
-            <th class="px-3 py-2 font-serif text-sm font-semibold">License cost</th>
-            <th class="px-3 py-2 font-serif text-sm font-semibold">Annual sales cap</th>
-            <th class="px-3 py-2 font-serif text-sm font-semibold">Online (in-state)</th>
-            <th class="px-3 py-2 font-serif text-sm font-semibold">Out-of-state shipping</th>
-            <th class="px-3 py-2 font-serif text-sm font-semibold">Training</th>
-            <th class="px-3 py-2 font-serif text-sm font-semibold">Inspection</th>
+            {columns.map((c) => <th class="px-3 py-2 font-serif text-sm font-semibold">{c.label}</th>)}
           </tr>
         </thead>
         <tbody>
-          {STATES.map((s) => {
-            const ch = isUnverified(s.sales_channels) ? null : s.sales_channels.value;
-            return (
-              <tr class="border-t border-rule align-top">
-                <td class="px-3 py-3">
-                  <a href={`/states/${s.slug}/`} class="font-medium no-underline">{s.name}</a>
-                  <div class="citation">/{s.abbreviation}</div>
-                </td>
-                <td class="px-3 py-3">{cell(s.permit_required, (v) => (v ? "Yes" : "No"))}</td>
-                <td class="px-3 py-3">
-                  {cell(s.license_cost_usd, (v) =>
-                    v === "none" ? "None" : v === "varies" ? "Varies" : `$${v.toLocaleString()}`,
-                  )}
-                </td>
-                <td class="px-3 py-3">
-                  {cell(s.sales_cap_usd_annual, capLabel)}
-                </td>
-                <td class="px-3 py-3">{ch ? channelLabel(ch.online_in_state) : "—"}</td>
-                <td class="px-3 py-3">{ch ? channelLabel(ch.online_out_of_state) : "—"}</td>
-                <td class="px-3 py-3">{cell(s.training_required, (v) => (v ? "Yes" : "No"))}</td>
-                <td class="px-3 py-3">{cell(s.inspection_required, (v) => (v ? "Yes" : "No"))}</td>
-              </tr>
-            );
-          })}
+          {STATES.map((s) => (
+            <tr class="border-t border-rule align-top">
+              <td class="px-3 py-3">
+                <a href={`/states/${s.slug}/`} class="font-medium no-underline">{s.name}</a>
+                <div class="citation">/{s.abbreviation}</div>
+              </td>
+              {columns.map((c) => {
+                const v = c.cell(s);
+                return (
+                  <td class="px-3 py-3" data-cell>
+                    {v ? v.lines.map((l) => (
+                      <div class="mb-1">
+                        <div>{l.text}</div>
+                        <span class="citation">
+                          <a
+                            href={l.cite.source_url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            title={l.cite.source_title ?? l.cite.source_url}
+                            aria-label={`Source: ${l.cite.source_title ?? l.cite.source_url}`}
+                          >Source</a> · {formatDate(l.cite.last_verified)}
+                        </span>
+                      </div>
+                    )) : "Unverified"}
+                  </td>
+                );
+              })}
+            </tr>
+          ))}
         </tbody>
       </table>
     </div>
-    <p class="citation mt-4">"—" indicates a field that has not been verified yet.</p>
   </div>
 </Layout>

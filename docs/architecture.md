@@ -1,6 +1,6 @@
 # Architecture — cottagefoodmap.com
 
-Status as of v2.E (2026-10-21). Roadmap and phases live in `docs/prd.md`.
+Status as of v2.F (2026-10-23). Roadmap and phases live in `docs/prd.md`.
 
 ## 1. Overview
 
@@ -34,7 +34,7 @@ src/data/phrases.ts ───┘                                            dist
 | `src/components/Fact.tsx` | React: renders one `Fact<T>` with source link and verified date |
 | `src/components/Disclaimer.astro` / `.tsx` | "Not legal advice" notice |
 | `src/pages/` | Routes — see §4 |
-| `src/__tests__/` | Vitest: `seo.test.js`, `trailing-slash.test.js`, `foods.test.ts`, `smoke.test.js`, `built-head.test.js` and `guides.test.js` (read `dist/`; run after build) |
+| `src/__tests__/` | Vitest: `seo.test.js`, `trailing-slash.test.js`, `foods.test.ts`, `smoke.test.js`, `built-head.test.js`, `guides.test.js`, and `compare.test.js` (read `dist/`; run after build) |
 | `genai/` | Original Lovable/TanStack Start export the Astro port was translated from (v1.B). Reference only; not built |
 | `public/` | `_headers` (cache + security headers), `robots.txt`, `favicon.svg`, IndexNow key file |
 
@@ -72,7 +72,7 @@ src/data/phrases.ts ───┘                                            dist
 |---|---|---|
 | `/` | `pages/index.astro` (own head tags, not `Seo.astro`) | 1 |
 | `/states/`, `/states/<state>/` | `pages/states/` | 1 + 20 |
-| `/compare/` | `pages/compare.astro` | 1 |
+| `/compare/` | `pages/compare.astro` — 7 columns × every state; each cell cites its Fact (tiers cite each tier); column summaries counted from verified facts | 1 |
 | `/foods/`, `/foods/<food>/` | `pages/foods/` | 1 + 7 |
 | `/guides/` | `pages/guides/index.astro` | 1 |
 | `/guides/license-cost/<state>/` | title/description include the cost answer | 20 |

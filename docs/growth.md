@@ -119,3 +119,12 @@ The high-volume generic head terms ("texas cottage food law") are increasingly a
 - **Action:** 5 state records researched from official sources (60 of 60 facts verified); fees and caps re-fetched independently; 214 pages built. v3 planning (v3.A) waits until these pages are indexed.
 - **Result:** TBD — review 2026-11-18
 - **Learning:** TBD
+
+## 2026-10-23 — v2.F: cited compare page
+- **Status:** active
+- **Hypothesis:** `/compare/` has a backlink and is indexed but earns almost nothing (thin, no cell cited). A table where every cell shows its source and date, plus computed per-column summaries, is the one view a generic answer can't reproduce, so it should earn impressions on comparison queries and make the backlink count.
+- **KPI:** impressions, clicks, and avg position on `/compare/`; queries landing on it.
+- **Baseline (GSC 90d to 2026-10-18, from the 2026-10-21 audit):** `/compare/` 16 imp · 0 clicks; indexed, last crawl 2026-10-12. 232 words, 0 cited cells.
+- **Action:** Every one of the 140 cells shows its source and verified date; column summaries computed from the data; title carries the state count ("Compare Cottage Food Laws in 20 U.S. States"); body text 232 → 472 words (citations excluded).
+- **Result:** TBD — review 2026-11-20
+- **Learning:** TBD
